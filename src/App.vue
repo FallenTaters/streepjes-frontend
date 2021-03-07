@@ -1,6 +1,7 @@
 <template>
     <div id="nav">
-        <router-link to="/">Home</router-link>
+        <router-link :to="{ name: 'club-select' }">Home</router-link> |
+        <router-link :to="{ name: 'order' }">Order Screen</router-link>
     </div>
     <router-view id="view" />
 </template>

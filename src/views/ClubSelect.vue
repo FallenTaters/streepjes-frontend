@@ -25,10 +25,12 @@
 export default {
     methods: {
         clickParabool() {
-            alert("parabool")
+            this.$store.commit("club", "parabool")
+            this.$router.push({ name: "order" })
         },
         clickGladiators() {
-            alert("gladiators")
+            this.$store.commit("club", "gladiators")
+            this.$router.push({ name: "order" })
         },
     },
 }

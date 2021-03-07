@@ -1,12 +1,22 @@
 <template>
-    <div class="card">
+    <div class="card" :class="select">
         <slot></slot>
     </div>
 </template>
 
 <script>
 export default {
-    props: ["emit"],
+    props: {
+        selected: {
+            type: Boolean,
+            default: false,
+        },
+    },
+    computed: {
+        select() {
+            return this.selected ? "selected" : ""
+        },
+    },
 }
 </script>
 
@@ -22,5 +32,9 @@ export default {
     background-color: lightgray;
     border: 3px solid gray;
     cursor: pointer;
+}
+
+.selected {
+    background-color: gray;
 }
 </style>
