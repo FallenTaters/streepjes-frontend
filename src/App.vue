@@ -45,4 +45,8 @@
     padding: 10px 20px;
     border-radius: 5px;
 }
+
+.auto-scroll {
+    overflow: auto;
+}
 </style>

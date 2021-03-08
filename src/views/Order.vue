@@ -3,31 +3,15 @@
         <h2>Category</h2>
         <h2>Product</h2>
         <h2>Order</h2>
-        <div id="categories">
-            <base-button
-                v-for="category in categories"
-                :selected="category.id == selectedCategoryID"
-                :key="category.id"
-                @click="selectCategory(category.id)"
-            >
-                {{ category.name }}
-            </base-button>
-        </div>
-        <div id="products">
-            <base-button
-                v-for="product in currentProducts"
-                :key="product.id"
-                class="flex-apart"
-                @click="addProduct(product)"
-            >
-                <div>{{ product.name }}</div>
-                <div>{{ product.price.print() }}</div>
-            </base-button>
-        </div>
-        <div id="bill">
+        <category-list v-model="selectedCategoryID"> </category-list>
+        <product-list
+            :categoryID="selectedCategoryID"
+            @select-product="addProduct"
+        ></product-list>
+        <div id="bill" class="auto-scroll">
             <base-button
                 v-for="orderline in order.orderlines"
-                :key="orderline"
+                :key="orderline.product.id"
                 class="flex-apart"
                 @click="removeProduct(orderline)"
                 :bordered="true"
@@ -43,8 +27,8 @@
         <div />
         <div id="bill-summary">
             <div class="flex-apart" style="padding: 0 30px">
-                <h3>Total</h3>
-                <h3>{{ order.totalPrice().print() }}</h3>
+                <h2>Total</h2>
+                <h2>{{ order.totalPrice().print() }}</h2>
             </div>
             <div class="flex-even" v-if="readyToPay">
                 <base-button
@@ -63,11 +47,12 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
 import ClubSelect from "@/components/ClubSelect.vue"
+import CategoryList from "@/components/catalog/CategoryList.vue"
+import ProductList from "@/components/catalog/ProductList.vue"
 import { Club } from "@/type/type"
 export default {
-    components: { ClubSelect },
+    components: { ClubSelect, CategoryList, ProductList },
     data() {
         return {
             selectedCategoryID: 0,
@@ -82,7 +67,9 @@ export default {
         },
         removeProduct(orderline) {
             if (orderline.amount <= 1) {
-                this.order.orderlines.pop(orderline)
+                this.order.orderlines = this.order.orderlines.filter(
+                    line => line != orderline
+                )
                 return
             }
             orderline.amount -= 1
@@ -92,12 +79,6 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(["categories"]),
-        currentProducts() {
-            return this.$store.getters.products.filter(
-                product => product.category == this.selectedCategoryID
-            )
-        },
         order() {
             return this.$store.getters.order
         },
@@ -107,6 +88,9 @@ export default {
                 this.order.totalPrice().amount > 0
             )
         },
+    },
+    mounted() {
+        this.selectedCategoryID = this.$store.getters.categories[0].id
     },
 }
 </script>

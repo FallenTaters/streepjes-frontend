@@ -4,16 +4,40 @@ export enum Club {
     Gladiators,
 }
 
-export interface Category {
+interface CategoryInterface {
     id: number
     name: string
 }
 
-export interface Product {
+export class Category {
+    id: number
+    name: string
+
+    constructor(obj: CategoryInterface) {
+        this.id = obj.id
+        this.name = obj.name
+    }
+}
+
+interface ProductInterface {
     id: number
     category: number
     name: string
     price: Price
+}
+
+export class Product {
+    id: number
+    category: number
+    name: string
+    price: Price
+
+    constructor(obj: ProductInterface) {
+        this.id = obj.id
+        this.category = obj.category
+        this.name = obj.name
+        this.price = obj.price
+    }
 }
 
 export class Price {
@@ -76,11 +100,25 @@ export class Order {
     }
 }
 
-export interface Member {
+interface MemberInterface {
     id: number
     club: Club
     name: string
     debt: Price
+}
+
+export class Member {
+    id: number
+    club: Club
+    name: string
+    debt: Price
+
+    constructor(obj: MemberInterface) {
+        this.id = obj.id
+        this.club = obj.club
+        this.name = obj.name
+        this.debt = obj.debt
+    }
 }
 
 export class MemberList {

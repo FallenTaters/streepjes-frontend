@@ -70,6 +70,96 @@ export default createStore({
                     category: 2,
                     price: new Price(150),
                 },
+                // {
+                //     id: 7,
+                //     name: "tosti kaas",
+                //     category: 2,
+                //     price: new Price(100),
+                // },
+                // {
+                //     id: 8,
+                //     name: "Tosti ham n kaas",
+                //     category: 2,
+                //     price: new Price(120),
+                // },
+                // {
+                //     id: 9,
+                //     name: "borrelnootjes",
+                //     category: 2,
+                //     price: new Price(150),
+                // },
+                // {
+                //     id: 10,
+                //     name: "tosti kaas",
+                //     category: 2,
+                //     price: new Price(100),
+                // },
+                // {
+                //     id: 11,
+                //     name: "Tosti ham n kaas",
+                //     category: 2,
+                //     price: new Price(120),
+                // },
+                // {
+                //     id: 12,
+                //     name: "borrelnootjes",
+                //     category: 2,
+                //     price: new Price(150),
+                // },
+                // {
+                //     id: 13,
+                //     name: "tosti kaas",
+                //     category: 2,
+                //     price: new Price(100),
+                // },
+                // {
+                //     id: 14,
+                //     name: "Tosti ham n kaas",
+                //     category: 2,
+                //     price: new Price(120),
+                // },
+                // {
+                //     id: 15,
+                //     name: "borrelnootjes",
+                //     category: 2,
+                //     price: new Price(150),
+                // },
+                // {
+                //     id: 16,
+                //     name: "tosti kaas",
+                //     category: 2,
+                //     price: new Price(100),
+                // },
+                // {
+                //     id: 17,
+                //     name: "Tosti ham n kaas",
+                //     category: 2,
+                //     price: new Price(120),
+                // },
+                // {
+                //     id: 18,
+                //     name: "borrelnootjes",
+                //     category: 2,
+                //     price: new Price(150),
+                // },
+                // {
+                //     id: 19,
+                //     name: "tosti kaas",
+                //     category: 2,
+                //     price: new Price(100),
+                // },
+                // {
+                //     id: 20,
+                //     name: "Tosti ham n kaas",
+                //     category: 2,
+                //     price: new Price(120),
+                // },
+                // {
+                //     id: 21,
+                //     name: "borrelnootjes",
+                //     category: 2,
+                //     price: new Price(150),
+                // },
             ],
             members: new MemberList([
                 {
@@ -141,6 +231,10 @@ export default createStore({
             state.selectedMember = member
         },
     },
-    actions: {},
+    actions: {
+        loadCatalog() {
+            console.log(`loading catalog`)
+        },
+    },
     modules: {},
 })
