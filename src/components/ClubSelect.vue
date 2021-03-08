@@ -1,27 +1,6 @@
 <template>
-    <div id="buttons" class="flex-even">
-        <base-button
-            @click="clickParabool"
-            :selected="currentClub == parabool"
-            class="square200"
-        >
-            <img
-                alt="GSKV de Parabool"
-                src="../assets/paraboologo.jpg"
-                class="square200"
-            />
-        </base-button>
-        <base-button
-            @click="clickGladiators"
-            :selected="currentClub == gladiators"
-            class="square200"
-        >
-            <img
-                alt="Lacrosse Groningen Gladiators"
-                src="../assets/gladiatorslogo.jpg"
-                class="square200"
-            />
-        </base-button>
+    <div @click="toggleClub">
+        <img :alt="alt" :src="src" class="square200" />
     </div>
 </template>
 
@@ -30,22 +9,39 @@ import { Club } from "@/type/type"
 
 export default {
     methods: {
-        clickParabool() {
+        toggleClub() {
+            if (this.club != Club.Gladiators) {
+                this.$store.commit("setClub", Club.Gladiators)
+                return
+            }
             this.$store.commit("setClub", Club.Parabool)
-        },
-        clickGladiators() {
-            this.$store.commit("setClub", Club.Gladiators)
         },
     },
     computed: {
-        gladiators() {
-            return Club.Gladiators
+        club() {
+            return this.$store.getters.club
         },
-        parabool() {
-            return Club.Parabool
+        alt() {
+            switch (this.club) {
+                case Club.Parabool:
+                    return "GSKV de Parabool"
+                case Club.Gladiators:
+                    return "Lacrosse Groningen Gladiators"
+                default:
+                    this.toggleClub()
+                    return ""
+            }
         },
-        currentClub() {
-            return this.$store.getters.getClub
+        src() {
+            switch (this.club) {
+                case Club.Parabool:
+                    return require("../assets/paraboologo.jpg")
+                case Club.Gladiators:
+                    return require("../assets/gladiatorslogo.jpg")
+                default:
+                    this.toggleClub()
+                    return ""
+            }
         },
     },
 }

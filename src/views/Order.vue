@@ -5,7 +5,7 @@
         <h2>Order</h2>
         <div id="categories">
             <base-button
-                v-for="category in getCategories"
+                v-for="category in categories"
                 :selected="category.id == selectedCategoryID"
                 :key="category.id"
                 @click="selectCategory(category.id)"
@@ -30,13 +30,17 @@
                 :key="orderline"
                 class="flex-apart"
                 @click="removeProduct(orderline)"
+                :bordered="true"
             >
-                <div>{{ orderline.amount }}x</div>
+                <div>
+                    <b>x{{ orderline.amount }}</b>
+                </div>
                 <div>{{ orderline.product.name }}</div>
                 <div>{{ orderline.price().print() }}</div>
             </base-button>
         </div>
         <club-select id="club-select" />
+        <div />
         <div id="bill-summary">
             <div class="flex-apart" style="padding: 0 30px">
                 <h3>Total</h3>
@@ -48,10 +52,10 @@
                     style="line-height: 3rem"
                     @click="selectCustomer"
                 >
-                    <h1>Select Member</h1>
+                    <h2>Select Member</h2>
                 </base-button>
                 <base-button class="square150" style="line-height: 3rem">
-                    <h1>Direct Payment</h1>
+                    <h2>Direct Payment</h2>
                 </base-button>
             </div>
         </div>
@@ -61,13 +65,12 @@
 <script>
 import { mapGetters } from "vuex"
 import ClubSelect from "@/components/ClubSelect.vue"
-import { Order, Club } from "@/type/type"
+import { Club } from "@/type/type"
 export default {
     components: { ClubSelect },
     data() {
         return {
             selectedCategoryID: 0,
-            order: new Order(),
         }
     },
     methods: {
@@ -89,15 +92,18 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(["getCategories"]),
+        ...mapGetters(["categories"]),
         currentProducts() {
-            return this.$store.getters.getProducts.filter(
+            return this.$store.getters.products.filter(
                 product => product.category == this.selectedCategoryID
             )
         },
+        order() {
+            return this.$store.getters.order
+        },
         readyToPay() {
             return (
-                this.$store.getters.getClub != Club.Unknown &&
+                this.$store.getters.club != Club.Unknown &&
                 this.order.totalPrice().amount > 0
             )
         },
@@ -114,9 +120,5 @@ export default {
     display: grid;
     grid-template-columns: 20% 35% 45%;
     grid-template-rows: 10% 65% 25%;
-}
-
-#club-select {
-    grid-column-end: span 2;
 }
 </style>

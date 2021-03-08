@@ -2,6 +2,7 @@
     <!-- <div id="nav">
         <router-link :to="{ name: 'order' }">Order Screen</router-link>
     </div> -->
+
     <router-view id="view" />
 </template>
 
@@ -11,6 +12,7 @@
         "Lucida Sans", Arial, sans-serif;
     text-align: center;
     box-sizing: border-box;
+    font-size: 1.5em;
 }
 
 #nav {
@@ -21,16 +23,10 @@
     display: flex;
     justify-content: space-evenly;
 }
-.flex-even > div {
-    margin: 3px;
-}
 
 .flex-apart {
     display: flex;
     justify-content: space-between;
-}
-.flex-apart > div {
-    margin: 3px;
 }
 
 .square200 {
@@ -40,5 +36,13 @@
 .square150 {
     height: 150px;
     width: 150px;
+}
+
+.badge-link {
+    background-color: darkslategrey;
+    color: whitesmoke;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
 }
 </style>
