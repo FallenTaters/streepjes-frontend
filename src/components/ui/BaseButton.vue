@@ -34,7 +34,13 @@ export default {
     cursor: pointer;
 }
 
+.card:active {
+    background-color: darkgray;
+    color: whitesmoke;
+}
+
 .selected {
     background-color: gray;
+    color: whitesmoke;
 }
 </style>

@@ -1,8 +1,7 @@
 <template>
-    <div id="nav">
-        <router-link :to="{ name: 'club-select' }">Home</router-link> |
+    <!-- <div id="nav">
         <router-link :to="{ name: 'order' }">Order Screen</router-link>
-    </div>
+    </div> -->
     <router-view id="view" />
 </template>
 
@@ -14,15 +13,32 @@
     box-sizing: border-box;
 }
 
-#view {
-    margin-top: 50px;
+#nav {
+    height: 9vh;
 }
 
-.flexer {
+.flex-even {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
 }
-.flexer > div {
+.flex-even > div {
     margin: 3px;
+}
+
+.flex-apart {
+    display: flex;
+    justify-content: space-between;
+}
+.flex-apart > div {
+    margin: 3px;
+}
+
+.square200 {
+    height: 200px;
+    width: 200px;
+}
+.square150 {
+    height: 150px;
+    width: 150px;
 }
 </style>
