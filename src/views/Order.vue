@@ -3,11 +3,12 @@
         <h2>Category</h2>
         <h2>Product</h2>
         <h2>Order</h2>
-        <category-list v-model="selectedCategoryID"> </category-list>
+        <category-list v-model="selectedCategoryID" />
         <product-list
-            :categoryID="selectedCategoryID"
             @select-product="addProduct"
-        ></product-list>
+            :club="club"
+            :categoryID="selectedCategoryID"
+        />
         <div id="bill" class="auto-scroll">
             <base-button
                 v-for="orderline in order.orderlines"
@@ -20,7 +21,7 @@
                     <b>x{{ orderline.amount }}</b>
                 </div>
                 <div>{{ orderline.product.name }}</div>
-                <div>{{ orderline.price().print() }}</div>
+                <div>{{ orderline.price(club).print() }}</div>
             </base-button>
         </div>
         <club-select id="club-select" />
@@ -28,7 +29,7 @@
         <div id="bill-summary">
             <div class="flex-apart" style="padding: 0 30px">
                 <h2>Total</h2>
-                <h2>{{ order.totalPrice().print() }}</h2>
+                <h2>{{ order.totalPrice(club).print() }}</h2>
             </div>
             <div class="flex-even" v-if="readyToPay">
                 <base-button
@@ -47,16 +48,48 @@
 </template>
 
 <script>
+import { ref } from "vue"
+import { useStore } from "vuex"
+
 import ClubSelect from "@/components/ClubSelect.vue"
 import CategoryList from "@/components/catalog/CategoryList.vue"
 import ProductList from "@/components/catalog/ProductList.vue"
 import { Club } from "@/type/type"
+import { getCatalog } from "@/api/catalog"
+
 export default {
     components: { ClubSelect, CategoryList, ProductList },
+    created() {
+        const loadState = ref("loading")
+        getCatalog()
+            .then(() => {
+                loadState.value = "ready"
+                this.selectedCategoryID = this.$store.getters.categories[0].id
+            })
+            .catch(error => {
+                console.error(error)
+                loadState.value = "failed"
+            })
+        return { loadState }
+    },
     data() {
         return {
             selectedCategoryID: 0,
         }
+    },
+    computed: {
+        order() {
+            return this.$store.getters.order
+        },
+        readyToPay() {
+            return (
+                this.$store.getters.club != Club.Unknown &&
+                this.order.totalPrice().amount > 0
+            )
+        },
+        club() {
+            return this.$store.getters.club
+        },
     },
     methods: {
         selectCategory(id) {
@@ -77,20 +110,6 @@ export default {
         selectCustomer() {
             this.$router.push({ name: "select-member" })
         },
-    },
-    computed: {
-        order() {
-            return this.$store.getters.order
-        },
-        readyToPay() {
-            return (
-                this.$store.getters.club != Club.Unknown &&
-                this.order.totalPrice().amount > 0
-            )
-        },
-    },
-    mounted() {
-        this.selectedCategoryID = this.$store.getters.categories[0].id
     },
 }
 </script>

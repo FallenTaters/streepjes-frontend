@@ -7,14 +7,14 @@
             @click="clickProduct(product)"
         >
             <div>{{ product.name }}</div>
-            <div>{{ product.price.print() }}</div>
+            <div>{{ product.getPrice(club).print() }}</div>
         </base-button>
     </div>
 </template>
 
 <script>
 export default {
-    props: ["categoryID"],
+    props: ["categoryID", "club"],
     methods: {
         clickProduct(product) {
             this.$emit(`select-product`, product)

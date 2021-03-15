@@ -3,7 +3,11 @@
         <router-link :to="{ name: 'order' }">Order Screen</router-link>
     </div> -->
 
-    <router-view id="view" />
+    <router-view id="view" v-slot="{ Component }">
+        <keep-alive include="Order">
+            <component :is="Component" />
+        </keep-alive>
+    </router-view>
 </template>
 
 <style>

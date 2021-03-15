@@ -4,6 +4,18 @@ export enum Club {
     Gladiators,
 }
 
+export class Price {
+    amount: number
+
+    constructor(amount: number) {
+        this.amount = amount
+    }
+
+    print() {
+        return `€ ${(this.amount / 100).toFixed(2)}`
+    }
+}
+
 interface CategoryInterface {
     id: number
     name: string
@@ -23,32 +35,34 @@ interface ProductInterface {
     id: number
     category: number
     name: string
-    price: Price
+    priceParabool: number
+    priceGladiators: number
 }
 
 export class Product {
     id: number
     category: number
     name: string
-    price: Price
+    priceParabool: Price
+    priceGladiators: Price
 
     constructor(obj: ProductInterface) {
         this.id = obj.id
         this.category = obj.category
         this.name = obj.name
-        this.price = obj.price
-    }
-}
-
-export class Price {
-    amount: number
-
-    constructor(amount: number) {
-        this.amount = amount
+        this.priceParabool = new Price(obj.priceParabool)
+        this.priceGladiators = new Price(obj.priceGladiators)
     }
 
-    print() {
-        return `€ ${(this.amount / 100).toFixed(2)}`
+    getPrice(club: Club) {
+        switch (club) {
+            case Club.Parabool:
+                return this.priceParabool
+            case Club.Gladiators:
+                return this.priceGladiators
+            default:
+                return new Price(0)
+        }
     }
 }
 
@@ -66,8 +80,8 @@ export class Orderline {
         this.amount = obj.amount
     }
 
-    price(): Price {
-        return new Price(this.product.price.amount * this.amount)
+    price(club: Club): Price {
+        return new Price(this.product.getPrice(club).amount * this.amount)
     }
 }
 
@@ -80,10 +94,10 @@ export class Order {
         this.orderlines = new Array<Orderline>()
     }
 
-    totalPrice(): Price {
+    totalPrice(club: Club): Price {
         let total = 0
         for (const orderline of this.orderlines) {
-            total += orderline.price().amount
+            total += orderline.price(club).amount
         }
         return new Price(total)
     }

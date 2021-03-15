@@ -23,144 +23,8 @@ interface MyStore {
 export default createStore({
     state(): MyStore {
         return {
-            categories: [
-                {
-                    id: 1,
-                    name: "drinks",
-                },
-                {
-                    id: 2,
-                    name: "food",
-                },
-            ],
-            products: [
-                {
-                    id: 1,
-                    name: "Grolsch",
-                    category: 1,
-                    price: new Price(150),
-                },
-                {
-                    id: 2,
-                    name: "Leffe Tripel",
-                    category: 1,
-                    price: new Price(250),
-                },
-                {
-                    id: 3,
-                    name: "Fris",
-                    category: 1,
-                    price: new Price(120),
-                },
-                {
-                    id: 4,
-                    name: "tosti kaas",
-                    category: 2,
-                    price: new Price(100),
-                },
-                {
-                    id: 5,
-                    name: "Tosti ham n kaas",
-                    category: 2,
-                    price: new Price(120),
-                },
-                {
-                    id: 6,
-                    name: "borrelnootjes",
-                    category: 2,
-                    price: new Price(150),
-                },
-                // {
-                //     id: 7,
-                //     name: "tosti kaas",
-                //     category: 2,
-                //     price: new Price(100),
-                // },
-                // {
-                //     id: 8,
-                //     name: "Tosti ham n kaas",
-                //     category: 2,
-                //     price: new Price(120),
-                // },
-                // {
-                //     id: 9,
-                //     name: "borrelnootjes",
-                //     category: 2,
-                //     price: new Price(150),
-                // },
-                // {
-                //     id: 10,
-                //     name: "tosti kaas",
-                //     category: 2,
-                //     price: new Price(100),
-                // },
-                // {
-                //     id: 11,
-                //     name: "Tosti ham n kaas",
-                //     category: 2,
-                //     price: new Price(120),
-                // },
-                // {
-                //     id: 12,
-                //     name: "borrelnootjes",
-                //     category: 2,
-                //     price: new Price(150),
-                // },
-                // {
-                //     id: 13,
-                //     name: "tosti kaas",
-                //     category: 2,
-                //     price: new Price(100),
-                // },
-                // {
-                //     id: 14,
-                //     name: "Tosti ham n kaas",
-                //     category: 2,
-                //     price: new Price(120),
-                // },
-                // {
-                //     id: 15,
-                //     name: "borrelnootjes",
-                //     category: 2,
-                //     price: new Price(150),
-                // },
-                // {
-                //     id: 16,
-                //     name: "tosti kaas",
-                //     category: 2,
-                //     price: new Price(100),
-                // },
-                // {
-                //     id: 17,
-                //     name: "Tosti ham n kaas",
-                //     category: 2,
-                //     price: new Price(120),
-                // },
-                // {
-                //     id: 18,
-                //     name: "borrelnootjes",
-                //     category: 2,
-                //     price: new Price(150),
-                // },
-                // {
-                //     id: 19,
-                //     name: "tosti kaas",
-                //     category: 2,
-                //     price: new Price(100),
-                // },
-                // {
-                //     id: 20,
-                //     name: "Tosti ham n kaas",
-                //     category: 2,
-                //     price: new Price(120),
-                // },
-                // {
-                //     id: 21,
-                //     name: "borrelnootjes",
-                //     category: 2,
-                //     price: new Price(150),
-                // },
-            ],
+            categories: [],
+            products: [],
             members: new MemberList([
                 {
                     id: 1,
@@ -230,11 +94,13 @@ export default createStore({
         selectMember(state: MyStore, member: Member) {
             state.selectedMember = member
         },
-    },
-    actions: {
-        loadCatalog() {
-            console.log(`loading catalog`)
+        setCategories(state: MyStore, categories: Category[]) {
+            state.categories = categories
+        },
+        setProducts(state: MyStore, products: Product[]) {
+            state.products = products
         },
     },
+    actions: {},
     modules: {},
 })
