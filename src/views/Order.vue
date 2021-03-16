@@ -1,5 +1,12 @@
 <template>
-    <div class="container">
+    <h1 v-if="loadState == 'loading'">Loading...</h1>
+    <h1 v-if="loadState == 'failed'">
+        Failed to load.
+        <a href="#" onclick="window.location.reload();">Refresh the page</a>
+        or
+        <router-link to="/login">log in again.</router-link>
+    </h1>
+    <div class="container" v-if="loadState == 'ready'">
         <h2>Category</h2>
         <h2>Product</h2>
         <h2>Order</h2>
@@ -24,7 +31,7 @@
                 <div>{{ orderline.price(club).print() }}</div>
             </base-button>
         </div>
-        <club-select id="club-select" />
+        <club-select />
         <div />
         <div id="bill-summary">
             <div class="flex-apart" style="padding: 0 30px">
@@ -48,9 +55,6 @@
 </template>
 
 <script>
-import { ref } from "vue"
-import { useStore } from "vuex"
-
 import ClubSelect from "@/components/ClubSelect.vue"
 import CategoryList from "@/components/catalog/CategoryList.vue"
 import ProductList from "@/components/catalog/ProductList.vue"
@@ -60,21 +64,20 @@ import { getCatalog } from "@/api/catalog"
 export default {
     components: { ClubSelect, CategoryList, ProductList },
     created() {
-        const loadState = ref("loading")
         getCatalog()
             .then(() => {
-                loadState.value = "ready"
+                this.loadState = "ready"
                 this.selectedCategoryID = this.$store.getters.categories[0].id
             })
             .catch(error => {
                 console.error(error)
-                loadState.value = "failed"
+                this.loadState = "failed"
             })
-        return { loadState }
     },
     data() {
         return {
             selectedCategoryID: 0,
+            loadState: "loading",
         }
     },
     computed: {
