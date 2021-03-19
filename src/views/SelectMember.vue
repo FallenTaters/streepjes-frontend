@@ -4,7 +4,7 @@
         <div class="flex-even">
             <router-link to="/" class="badge-link">← Back</router-link>
             <input
-                id="search"
+                class="input-bigger"
                 type="text"
                 v-model="searchString"
                 placeholder="Search"
@@ -56,13 +56,6 @@ export default {
 </script>
 
 <style scoped>
-#search {
-    text-align: center;
-    padding: 10px;
-    border: 2px solid gray;
-    border-radius: 5px;
-}
-
 #member-grid {
     display: grid;
     height: 80vh;

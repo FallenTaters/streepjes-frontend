@@ -48,9 +48,17 @@
     text-decoration: none;
     padding: 10px 20px;
     border-radius: 5px;
+    border: none;
 }
 
 .auto-scroll {
     overflow: auto;
+}
+
+.input-bigger {
+    text-align: center;
+    padding: 10px;
+    border: 2px solid gray;
+    border-radius: 5px;
 }
 </style>
