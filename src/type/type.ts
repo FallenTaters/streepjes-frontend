@@ -1,7 +1,17 @@
+export const Role = {
+    NotAuthorized: "not_authorized",
+    Admin: "admin",
+    Bartender: "bartender",
+}
+
 export enum Club {
     Unknown,
     Parabool,
     Gladiators,
+}
+
+interface PriceObject {
+    amount: number
 }
 
 export class Price {
@@ -31,12 +41,12 @@ export class Category {
     }
 }
 
-interface ProductInterface {
+interface ProductObject {
     id: number
     category: number
     name: string
-    priceParabool: number
-    priceGladiators: number
+    priceParabool: PriceObject
+    priceGladiators: PriceObject
 }
 
 export class Product {
@@ -46,12 +56,21 @@ export class Product {
     priceParabool: Price
     priceGladiators: Price
 
-    constructor(obj: ProductInterface) {
-        this.id = obj.id
-        this.category = obj.category
-        this.name = obj.name
-        this.priceParabool = new Price(obj.priceParabool)
-        this.priceGladiators = new Price(obj.priceGladiators)
+    constructor(obj: ProductObject) {
+        this.id = 0
+        this.category = 0
+        this.name = ""
+        this.priceParabool = new Price(0)
+        this.priceGladiators = new Price(0)
+
+        Object.assign(this, obj)
+
+        if (obj.priceParabool) {
+            this.priceParabool = new Price(obj.priceParabool.amount)
+        }
+        if (obj.priceGladiators) {
+            this.priceGladiators = new Price(obj.priceGladiators.amount)
+        }
     }
 
     getPrice(club: Club) {
@@ -66,8 +85,8 @@ export class Product {
     }
 }
 
-interface OrderlineInterface {
-    product: Product
+interface OrderlineObject {
+    product: ProductObject
     amount: number
 }
 
@@ -75,9 +94,22 @@ export class Orderline {
     product: Product
     amount: number
 
-    constructor(obj: OrderlineInterface) {
-        this.product = obj.product
-        this.amount = obj.amount
+    constructor(obj: OrderlineObject) {
+        this.product = new Product({
+            id: 0,
+            category: 0,
+            name: "",
+            priceParabool: new Price(0),
+            priceGladiators: new Price(0),
+        })
+        this.amount = 0
+
+        Object.assign(this, obj)
+
+        if (obj.product) {
+            console.log(obj.product)
+            this.product = new Product(obj.product)
+        }
     }
 
     price(club: Club): Price {
@@ -85,13 +117,27 @@ export class Orderline {
     }
 }
 
+export interface OrderObject {
+    club: number
+    orderlines: OrderlineObject[]
+}
+
 export class Order {
     club: Club
     orderlines: Orderline[]
 
-    constructor(club: Club) {
-        this.club = club
+    constructor(obj: OrderObject) {
+        this.club = Club.Unknown
         this.orderlines = new Array<Orderline>()
+
+        Object.assign(this, obj)
+
+        if (obj.orderlines) {
+            this.orderlines = []
+            obj.orderlines.forEach(ol => {
+                this.orderlines.push(new Orderline(ol))
+            })
+        }
     }
 
     totalPrice(club: Club): Price {
@@ -110,36 +156,48 @@ export class Order {
             }
         }
 
-        this.orderlines.push(new Orderline({ product: product, amount: 1 }))
+        this.orderlines.push(
+            new Orderline({
+                product: (product as unknown) as ProductObject,
+                amount: 1,
+            })
+        )
     }
 }
 
-interface MemberInterface {
+interface MemberObject {
     id: number
     club: Club
     name: string
-    debt: Price
+    debt: PriceObject
 }
 
 export class Member {
-    id: number
-    club: Club
-    name: string
-    debt: Price
+    id!: number
+    club!: Club
+    name!: string
+    debt!: Price
 
-    constructor(obj: MemberInterface) {
-        this.id = obj.id
-        this.club = obj.club
-        this.name = obj.name
-        this.debt = obj.debt
+    constructor(obj: MemberObject) {
+        Object.assign(this, obj)
+
+        if (obj.debt) {
+            this.debt = new Price(obj.debt.amount)
+        }
     }
 }
 
+interface MemberListObject {
+    members: MemberObject[]
+}
 export class MemberList {
     members: Member[]
 
-    constructor(members: Member[]) {
-        this.members = members
+    constructor(obj: MemberListObject) {
+        this.members = []
+        obj.members.forEach(mem => {
+            this.members.push(new Member(mem))
+        })
     }
 
     getByClub(club: Club): Member[] {

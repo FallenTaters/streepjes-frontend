@@ -6,6 +6,7 @@
             gladiators: gladiators,
             parabool: parabool,
             bordered: bordered,
+            disabled: disabled,
         }"
     >
         <slot></slot>
@@ -21,6 +22,10 @@ export default {
             default: false,
         },
         bordered: {
+            type: Boolean,
+            default: false,
+        },
+        disabled: {
             type: Boolean,
             default: false,
         },
@@ -44,6 +49,9 @@ export default {
 }
 .card:hover {
     cursor: pointer;
+}
+.card.disabled {
+    background-color: gray !important;
 }
 
 .bordered {

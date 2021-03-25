@@ -10,6 +10,7 @@ import { Club } from "@/type/type"
 export default {
     methods: {
         toggleClub() {
+            this.$store.dispatch("unselectMember")
             if (this.club != Club.Gladiators) {
                 this.$store.commit("setClub", Club.Gladiators)
                 return

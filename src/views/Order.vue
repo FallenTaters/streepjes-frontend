@@ -1,4 +1,5 @@
 <template>
+    <the-header></the-header>
     <h1 v-if="loadState == 'loading'">Loading...</h1>
     <h1 v-if="loadState == 'failed'">
         Failed to load.
@@ -32,7 +33,7 @@
             </base-button>
         </div>
         <club-select />
-        <div />
+        <member-select />
         <div id="bill-summary">
             <div class="flex-apart" style="padding: 0 30px">
                 <h2>Total</h2>
@@ -42,11 +43,11 @@
                 <base-button
                     class="square150"
                     style="line-height: 3rem"
-                    @click="selectCustomer"
+                    :disabled="!(selectedMember.id > 0)"
                 >
-                    <h2>Select Member</h2>
+                    <h2>Add to Bill</h2>
                 </base-button>
-                <base-button class="square150" style="line-height: 3rem">
+                <base-button class="square150" style="line-height: 2.7rem">
                     <h2>Direct Payment</h2>
                 </base-button>
             </div>
@@ -54,15 +55,24 @@
     </div>
 </template>
 
-<script>
+<script type="ts">
+import { mapGetters } from "vuex"
 import ClubSelect from "@/components/ClubSelect.vue"
+import MemberSelect from "@/components/MemberSelect.vue"
 import CategoryList from "@/components/catalog/CategoryList.vue"
 import ProductList from "@/components/catalog/ProductList.vue"
+import TheHeader from "@/components/ui/TheHeader.vue"
 import { Club } from "@/type/type"
 import { getCatalog } from "@/api/catalog"
 
 export default {
-    components: { ClubSelect, CategoryList, ProductList },
+    components: {
+        ClubSelect,
+        CategoryList,
+        ProductList,
+        TheHeader,
+        MemberSelect,
+    },
     created() {
         getCatalog()
             .then(() => {
@@ -81,17 +91,19 @@ export default {
         }
     },
     computed: {
-        order() {
-            return this.$store.getters.order
-        },
+        ...mapGetters(["order", "club", "selectedMember"]),
         readyToPay() {
             return (
-                this.$store.getters.club != Club.Unknown &&
-                this.order.totalPrice().amount > 0
+                this.club != Club.Unknown &&
+                this.order.totalPrice(this.club).amount > 0
             )
         },
-        club() {
-            return this.$store.getters.club
+    },
+    watch: {
+        loadState(value) {
+            if (value == `failed`) {
+                this.$router.push(`/login`)
+            }
         },
     },
     methods: {
@@ -109,9 +121,6 @@ export default {
                 return
             }
             orderline.amount -= 1
-        },
-        selectCustomer() {
-            this.$router.push({ name: "select-member" })
         },
     },
 }

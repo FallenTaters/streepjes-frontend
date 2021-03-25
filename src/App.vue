@@ -1,16 +1,28 @@
 <template>
-    <!-- <div id="nav">
-        <router-link :to="{ name: 'order' }">Order Screen</router-link>
-    </div> -->
-
-    <router-view v-slot="{ Component }">
-        <keep-alive include="Order">
+    <div @click="setActive">
+        <router-view v-slot="{ Component }">
             <component :is="Component" />
-        </keep-alive>
-    </router-view>
+        </router-view>
+    </div>
 </template>
 
+<script>
+export default {
+    methods: {
+        setActive() {
+            this.$store.commit("setActive")
+        },
+    },
+}
+</script>
+
 <style>
+body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
 #app {
     font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
         "Lucida Sans", Arial, sans-serif;
@@ -21,6 +33,10 @@
 
 #nav {
     height: 9vh;
+}
+
+.flex {
+    display: flex;
 }
 
 .flex-even {
@@ -41,6 +57,10 @@
     height: 150px;
     width: 150px;
 }
+.square50 {
+    height: 50px;
+    width: 50px;
+}
 
 .badge-link {
     background-color: darkslategrey;
@@ -56,9 +76,18 @@
 }
 
 .input-bigger {
+    font-size: 20px;
     text-align: center;
     padding: 10px;
     border: 2px solid gray;
     border-radius: 5px;
+}
+
+.middled {
+    align-self: center;
+}
+
+.text-left {
+    text-align: left;
 }
 </style>

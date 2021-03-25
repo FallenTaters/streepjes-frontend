@@ -7,5 +7,6 @@ export async function postLogin(username: string, password: string) {
             username: username,
             password: password,
         }),
+        credentials: "include",
     })
 }

@@ -31,6 +31,7 @@
 
 <script>
 import { postLogin } from "@/api/auth"
+import { Role } from "@/type/type"
 
 export default {
     data() {
@@ -46,10 +47,37 @@ export default {
             postLogin(this.username, this.password)
                 .then(resp => {
                     switch (resp.status) {
+                        case 200:
+                            resp.json().then(body => {
+                                this.$store.commit(`setRole`, body)
+                                switch (body) {
+                                    case Role.Admin:
+                                        this.$router.push(`/admin`)
+                                        break
+                                    case Role.Bartender:
+                                        this.$router.push(`/order`)
+                                        break
+                                    default:
+                                        this.errorMessage =
+                                            "User permissions unknown. Try a different account."
+                                }
+                            })
+                            break
+                        case 401:
+                            this.errorMessage = "Invalid credentials."
+                            break
+                        case 500:
+                            this.errorMessage =
+                                "internal server error - something went wrong!"
+                            break
+                        default:
+                            this.errorMessage =
+                                "the server responded with code ${resp.status} (${resp.statusText})"
+                            break
                     }
                 })
                 .catch(() => {
-                    this.errorMessage = "Unable to reach server."
+                    this.errorMessage = "Unable to reach server. Is it running?"
                 })
         },
     },
@@ -73,5 +101,9 @@ export default {
 .form-row {
     margin: 10px;
     margin-bottom: 30px;
+}
+
+.errorMessage {
+    color: red;
 }
 </style>

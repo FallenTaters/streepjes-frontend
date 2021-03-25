@@ -16,9 +16,9 @@ const routes: Array<RouteRecordRaw> = [
         redirect: "/",
     },
     {
-        path: "/select-member",
-        name: "select-member",
-        component: () => import("../views/SelectMember.vue"),
+        path: "/admin",
+        name: "admin",
+        component: () => import("../views/Admin.vue"),
     },
 ]
 
