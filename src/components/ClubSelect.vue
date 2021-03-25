@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { Club } from "@/type/type"
+import { Club } from "@/type/member"
 
 export default {
     methods: {

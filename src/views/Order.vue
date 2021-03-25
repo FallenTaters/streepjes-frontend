@@ -62,7 +62,7 @@ import MemberSelect from "@/components/MemberSelect.vue"
 import CategoryList from "@/components/catalog/CategoryList.vue"
 import ProductList from "@/components/catalog/ProductList.vue"
 import TheHeader from "@/components/ui/TheHeader.vue"
-import { Club } from "@/type/type"
+import { Club } from "@/type/member"
 import { getCatalog } from "@/api/catalog"
 
 export default {

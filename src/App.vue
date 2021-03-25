@@ -6,14 +6,19 @@
     </div>
 </template>
 
-<script>
-export default {
-    methods: {
-        setActive() {
-            this.$store.commit("setActive")
-        },
+<script lang="ts">
+import { defineComponent } from "vue"
+import { useStore } from "vuex"
+
+export default defineComponent({
+    name: "App",
+    setup() {
+        const store = useStore()
+        return {
+            store,
+        }
     },
-}
+})
 </script>
 
 <style>

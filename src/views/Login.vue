@@ -31,7 +31,7 @@
 
 <script>
 import { postLogin } from "@/api/auth"
-import { Role } from "@/type/type"
+import { Role } from "@/type/member"
 
 export default {
     data() {
