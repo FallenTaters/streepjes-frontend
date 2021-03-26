@@ -7,17 +7,22 @@
             @click="clickProduct(product)"
         >
             <div>{{ product.name }}</div>
-            <div>{{ product.getPrice(club).print() }}</div>
+            <div>{{ price(product) }}</div>
         </base-button>
     </div>
 </template>
 
 <script>
+import { productPrice, renderPrice } from "@/type/catalog"
+
 export default {
     props: ["categoryID", "club"],
     methods: {
         clickProduct(product) {
             this.$emit(`select-product`, product)
+        },
+        price(p) {
+            return renderPrice(productPrice(p, this.club))
         },
     },
     computed: {

@@ -10,7 +10,7 @@ const emptyMember: Member = {
     debt: 0,
 }
 
-const store: Module<Order, MyStore> = {
+const store: Module<Order, object> = {
     state: {
         club: Club.Unknown,
         orderlines: [],
@@ -28,8 +28,11 @@ const store: Module<Order, MyStore> = {
         orderlines(state): Orderline[] {
             return state.orderlines
         },
-        member(state): Member {
+        selectedMember(state): Member {
             return state.member
+        },
+        memberSelected(state): boolean {
+            return state.member.id != 0
         },
         totalPrice(state): number {
             return orderPrice(state)
@@ -39,16 +42,44 @@ const store: Module<Order, MyStore> = {
         setMember(state, member: Member) {
             state.member = member
         },
+        removeOrderline(state, orderline: Orderline) {
+            state.orderlines = state.orderlines.filter(ol => ol != orderline)
+        },
+        setClub(state, club: Club) {
+            state.club = club
+        },
+        addProduct(state, product: Product) {
+            for (const ol of state.orderlines) {
+                if (ol.product.id === product.id) {
+                    ol.amount++
+                    return
+                }
+            }
+            state.orderlines.push({
+                amount: 1,
+                product: product,
+            })
+        },
     },
     actions: {
         addProduct({ commit }, product: Product) {
             commit("addProduct", product)
         },
-        setMember({ commit }, member: Member) {
+        removeFromOrderline({ commit }, ol: Orderline) {
+            if (ol.amount > 1) {
+                ol.amount--
+                return
+            }
+            commit("removeOrderline", ol)
+        },
+        selectMember({ commit }, member: Member) {
             commit("setMember", member)
         },
-        unsetMember({ commit }) {
+        unselectMember({ commit }) {
             commit("setMember", emptyMember)
+        },
+        setClub({ commit }, club: Club) {
+            commit("setClub", club)
         },
     },
 }

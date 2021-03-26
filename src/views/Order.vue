@@ -1,13 +1,13 @@
 <template>
     <the-header></the-header>
-    <h1 v-if="loadState == 'loading'">Loading...</h1>
-    <h1 v-if="loadState == 'failed'">
+    <h1 v-if="catalogLoadState == LoadState.Loading">Loading...</h1>
+    <h1 v-if="catalogLoadState == LoadState.Failed">
         Failed to load.
         <a href="#" onclick="window.location.reload();">Refresh the page</a>
         or
         <router-link to="/login">log in again.</router-link>
     </h1>
-    <div class="container" v-if="loadState == 'ready'">
+    <div class="container" v-if="catalogLoadState == LoadState.Success">
         <h2>Category</h2>
         <h2>Product</h2>
         <h2>Order</h2>
@@ -19,7 +19,7 @@
         />
         <div id="bill" class="auto-scroll">
             <base-button
-                v-for="orderline in order.orderlines"
+                v-for="orderline in orderlines"
                 :key="orderline.product.id"
                 class="flex-apart"
                 @click="removeProduct(orderline)"
@@ -29,7 +29,7 @@
                     <b>x{{ orderline.amount }}</b>
                 </div>
                 <div>{{ orderline.product.name }}</div>
-                <div>{{ orderline.price(club).print() }}</div>
+                <div>{{ olPrice(orderline) }}</div>
             </base-button>
         </div>
         <club-select />
@@ -37,7 +37,7 @@
         <div id="bill-summary">
             <div class="flex-apart" style="padding: 0 30px">
                 <h2>Total</h2>
-                <h2>{{ order.totalPrice(club).print() }}</h2>
+                <h2>{{ renderPrice(totalPrice) }}</h2>
             </div>
             <div class="flex-even" v-if="readyToPay">
                 <base-button
@@ -55,7 +55,7 @@
     </div>
 </template>
 
-<script type="ts">
+<script>
 import { mapGetters } from "vuex"
 import ClubSelect from "@/components/ClubSelect.vue"
 import MemberSelect from "@/components/MemberSelect.vue"
@@ -63,9 +63,12 @@ import CategoryList from "@/components/catalog/CategoryList.vue"
 import ProductList from "@/components/catalog/ProductList.vue"
 import TheHeader from "@/components/ui/TheHeader.vue"
 import { Club } from "@/type/member"
-import { getCatalog } from "@/api/catalog"
+import { LoadState } from "@/api/type"
+import { defineComponent } from "vue"
+import { renderPrice } from "@/type/catalog"
+import { orderlinePrice } from "@/type/order"
 
-export default {
+export default defineComponent({
     components: {
         ClubSelect,
         CategoryList,
@@ -74,56 +77,50 @@ export default {
         MemberSelect,
     },
     created() {
-        getCatalog()
-            .then(() => {
-                this.loadState = "ready"
-                this.selectedCategoryID = this.$store.getters.categories[0].id
-            })
-            .catch(error => {
-                console.error(error)
-                this.loadState = "failed"
-            })
+        this.$store.dispatch("fetchCatalog")
+        this.$store.dispatch("fetchMembers")
     },
     data() {
         return {
             selectedCategoryID: 0,
-            loadState: "loading",
+            LoadState,
         }
     },
     computed: {
-        ...mapGetters(["order", "club", "selectedMember"]),
+        ...mapGetters([
+            "orderlines",
+            "club",
+            "selectedMember",
+            "totalPrice",
+            "catalogLoadState",
+        ]),
         readyToPay() {
-            return (
-                this.club != Club.Unknown &&
-                this.order.totalPrice(this.club).amount > 0
-            )
+            return this.club != Club.Unknown && this.totalPrice > 0
         },
     },
     watch: {
-        loadState(value) {
-            if (value == `failed`) {
-                this.$router.push(`/login`)
+        catalogLoadState(v) {
+            if (v == LoadState.Success) {
+                this.selectedCategoryID = this.$store.getters.categories[0].id
             }
         },
     },
     methods: {
+        renderPrice,
         selectCategory(id) {
             this.selectedCategoryID = id
         },
         addProduct(product) {
-            this.order.addProduct(product)
+            this.$store.dispatch("addProduct", product)
         },
         removeProduct(orderline) {
-            if (orderline.amount <= 1) {
-                this.order.orderlines = this.order.orderlines.filter(
-                    line => line != orderline
-                )
-                return
-            }
-            orderline.amount -= 1
+            this.$store.dispatch("removeFromOrderline", orderline)
+        },
+        olPrice(ol) {
+            return renderPrice(orderlinePrice(ol, this.club))
         },
     },
-}
+})
 </script>
 
 <style scoped>

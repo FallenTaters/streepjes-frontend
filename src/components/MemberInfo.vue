@@ -3,13 +3,20 @@
         <h3>
             {{ member.name }}
         </h3>
-        Current Bill: {{ member.debt.print() }}
+        Current Bill: {{ renderPrice(member.debt) }}
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import { renderPrice } from "@/type/catalog"
+
 export default {
     props: ["member"],
+    methods: {
+        renderPrice(x: number) {
+            return renderPrice(x)
+        },
+    },
 }
 </script>
 

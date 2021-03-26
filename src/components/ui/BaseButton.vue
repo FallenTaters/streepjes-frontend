@@ -46,6 +46,7 @@ export default {
     margin: 10px;
     padding: 15px;
     border-radius: 15px;
+    overflow: hidden;
 }
 .card:hover {
     cursor: pointer;

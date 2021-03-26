@@ -12,10 +12,10 @@ export default {
         toggleClub() {
             this.$store.dispatch("unselectMember")
             if (this.club != Club.Gladiators) {
-                this.$store.commit("setClub", Club.Gladiators)
+                this.$store.dispatch("setClub", Club.Gladiators)
                 return
             }
-            this.$store.commit("setClub", Club.Parabool)
+            this.$store.dispatch("setClub", Club.Parabool)
         },
     },
     computed: {

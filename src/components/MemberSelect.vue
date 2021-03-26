@@ -20,6 +20,7 @@
                 </div>
                 <div id="member-grid">
                     <base-button
+                        style="font-size: 0.7em"
                         v-for="member in members"
                         :key="member.id"
                         @click="selectMember(member)"
@@ -38,11 +39,6 @@ import MemberInfo from "@/components/MemberInfo"
 
 export default {
     components: { MemberInfo },
-    created() {
-        if (!this.$store.getters.isClubChosen) {
-            this.$router.push({ name: "order" })
-        }
-    },
     data() {
         return {
             searchString: "",
@@ -50,35 +46,31 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(["selectedMember"]),
+        ...mapGetters(["selectedMember", "memberSelected", "club"]),
         members() {
-            let members = this.$store.getters.members
+            let members = this.$store.getters.byClub
+
             if (this.searchString) {
                 const search = this.searchString.toLowerCase()
                 members = members.filter(member =>
                     member.name.toLowerCase().includes(search)
                 )
             }
+
             return members
-        },
-        memberSelected() {
-            return this.selectedMember.id > 0
         },
     },
     methods: {
         click() {
             if (this.memberSelected) {
-                this.unselectMember()
+                this.$store.dispatch("unselectMember")
                 return
             }
             this.showModal = true
         },
         selectMember(member) {
-            this.$store.commit("selectMember", member)
+            this.$store.dispatch("selectMember", member)
             this.showModal = false
-        },
-        unselectMember() {
-            this.$store.dispatch("unselectMember")
         },
     },
 }

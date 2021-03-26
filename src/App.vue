@@ -6,19 +6,28 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue"
-import { useStore } from "vuex"
+<script>
+import { mapGetters } from "vuex"
+import { Role } from "@/type/user"
 
-export default defineComponent({
+export default {
     name: "App",
-    setup() {
-        const store = useStore()
-        return {
-            store,
-        }
+    computed: {
+        ...mapGetters(["role"]),
     },
-})
+    watch: {
+        role(v) {
+            if (v == Role.NotAuthorized) {
+                this.$router.push(`/login`)
+            }
+        },
+    },
+    methods: {
+        setActive() {
+            this.$store.dispatch("refreshActive")
+        },
+    },
+}
 </script>
 
 <style>

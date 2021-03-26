@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { Role } from "@/type/member"
+import { Role } from "@/type/user"
 
 export default {
     methods: {

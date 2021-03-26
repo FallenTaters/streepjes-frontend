@@ -1,11 +1,61 @@
-import { Club, Member } from "@/type/member"
-import { StoreOptions } from "vuex"
+import { Member } from "@/type/member"
+import { Module } from "vuex"
+import { getMembers } from "@/api/members"
+import { LoadState } from "@/api/type"
 
-const store: StoreOptions<Member[]> = {
-    state: [],
+interface MemberStore {
+    members: Member[]
+    loadState: LoadState
+}
+
+const store: Module<MemberStore, object> = {
+    state: {
+        members: [],
+        loadState: LoadState.NotLoaded,
+    },
     getters: {
-        byClub(state, club: Club) {
-            return state.filter(mem => mem.club == club)
+        byClub(state, getters) {
+            return state.members.filter(mem => mem.club == getters.club)
+        },
+    },
+    mutations: {
+        setMembers(state, members: Member[]) {
+            state.members = members
+        },
+        setMemberLoadState(state, newState: LoadState) {
+            state.loadState = newState
+        },
+    },
+    actions: {
+        async fetchMembers({ commit, dispatch }) {
+            commit("setCatalogLoadState", LoadState.Loading)
+
+            let resp
+            try {
+                resp = await getMembers()
+            } catch {
+                commit("setMemberLoadState", LoadState.Failed)
+                return
+            }
+
+            let data
+            switch (resp.status) {
+                case 200:
+                    data = await resp.json()
+                    break
+
+                case 401:
+                    dispatch("unauthorized")
+                    commit("setMemberLoadState", LoadState.Failed)
+                    return
+
+                default:
+                    commit("setMemberLoadState", LoadState.Failed)
+                    return
+            }
+
+            commit("setMembers", data)
+            commit("setMemberLoadState", LoadState.Success)
         },
     },
 }
