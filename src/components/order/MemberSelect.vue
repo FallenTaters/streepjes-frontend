@@ -35,7 +35,7 @@
 
 <script>
 import { mapGetters } from "vuex"
-import MemberInfo from "@/components/MemberInfo"
+import MemberInfo from "@/components/members/MemberInfo"
 
 export default {
     components: { MemberInfo },

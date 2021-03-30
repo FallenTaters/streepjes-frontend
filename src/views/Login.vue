@@ -79,7 +79,7 @@ export default {
                     break
 
                 case Role.Bartender:
-                    this.$router.push(`/order`)
+                    this.$router.push(`/`)
                     break
             }
         },
@@ -104,9 +104,5 @@ export default {
 .form-row {
     margin: 10px;
     margin-bottom: 30px;
-}
-
-.errorMessage {
-    color: red;
 }
 </style>

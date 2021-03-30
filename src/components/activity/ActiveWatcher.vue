@@ -108,5 +108,6 @@ export default defineComponent({
     background-color: black;
     color: white;
     padding-top: 35vh;
+    z-index: 10000;
 }
 </style>

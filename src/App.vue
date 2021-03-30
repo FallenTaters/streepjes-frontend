@@ -85,6 +85,7 @@ body {
     padding: 10px 20px;
     border-radius: 5px;
     border: none;
+    font-size: 1.2em;
 }
 
 .auto-scroll {
@@ -105,5 +106,9 @@ body {
 
 .text-left {
     text-align: left;
+}
+
+.errorMessage {
+    color: red;
 }
 </style>

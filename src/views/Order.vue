@@ -39,34 +39,24 @@
                 <h2>Total</h2>
                 <h2>{{ renderPrice(totalPrice) }}</h2>
             </div>
-            <div class="flex-even" v-if="readyToPay">
-                <base-button
-                    class="square150"
-                    style="line-height: 3rem"
-                    :disabled="!(selectedMember.id > 0)"
-                >
-                    <h2>Add to Bill</h2>
-                </base-button>
-                <base-button class="square150" style="line-height: 2.7rem">
-                    <h2>Direct Payment</h2>
-                </base-button>
-            </div>
+            <payment-buttons v-if="readyToPay" />
         </div>
     </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex"
-import ClubSelect from "@/components/ClubSelect.vue"
-import MemberSelect from "@/components/MemberSelect.vue"
+import ClubSelect from "@/components/order/ClubSelect.vue"
+import MemberSelect from "@/components/order/MemberSelect.vue"
 import CategoryList from "@/components/catalog/CategoryList.vue"
 import ProductList from "@/components/catalog/ProductList.vue"
-import TheHeader from "@/components/ui/TheHeader.vue"
+import TheHeader from "@/components/TheHeader.vue"
 import { Club } from "@/type/member"
 import { LoadState } from "@/api/type"
 import { defineComponent } from "vue"
 import { renderPrice } from "@/type/catalog"
 import { orderlinePrice } from "@/type/order"
+import PaymentButtons from "@/components/order/PaymentButtons.vue"
 
 export default defineComponent({
     components: {
@@ -75,6 +65,7 @@ export default defineComponent({
         ProductList,
         TheHeader,
         MemberSelect,
+        PaymentButtons,
     },
     created() {
         this.$store.dispatch("fetchCatalog")

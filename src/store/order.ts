@@ -10,17 +10,14 @@ const emptyMember: Member = {
     debt: 0,
 }
 
+const emptyOrder: Order = {
+    club: Club.Unknown,
+    orderlines: [],
+    member: emptyMember,
+}
+
 const store: Module<Order, object> = {
-    state: {
-        club: Club.Unknown,
-        orderlines: [],
-        member: {
-            id: 0,
-            club: Club.Unknown,
-            name: "",
-            debt: 0,
-        },
-    },
+    state: emptyOrder,
     getters: {
         club(state): Club {
             return state.club
@@ -60,6 +57,9 @@ const store: Module<Order, object> = {
                 product: product,
             })
         },
+        clearOrder(state) {
+            Object.assign(state, emptyOrder)
+        },
     },
     actions: {
         addProduct({ commit }, product: Product) {
@@ -80,6 +80,9 @@ const store: Module<Order, object> = {
         },
         setClub({ commit }, club: Club) {
             commit("setClub", club)
+        },
+        clearOrder({ commit }) {
+            commit("clearOrder")
         },
     },
 }

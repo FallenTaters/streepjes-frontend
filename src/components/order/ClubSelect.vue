@@ -36,9 +36,9 @@ export default {
         src() {
             switch (this.club) {
                 case Club.Parabool:
-                    return require("../assets/paraboologo.jpg")
+                    return require("@/assets/paraboologo.jpg")
                 case Club.Gladiators:
-                    return require("../assets/gladiatorslogo.jpg")
+                    return require("@/assets/gladiatorslogo.jpg")
                 default:
                     this.toggleClub()
                     return ""
