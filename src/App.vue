@@ -1,5 +1,10 @@
 <template>
-    <div @click="setActive">
+    <active-watcher v-if="loggedIn">
+        <router-view v-slot="{ Component }">
+            <component :is="Component" />
+        </router-view>
+    </active-watcher>
+    <div v-else>
         <router-view v-slot="{ Component }">
             <component :is="Component" />
         </router-view>
@@ -9,22 +14,19 @@
 <script>
 import { mapGetters } from "vuex"
 import { Role } from "@/type/user"
+import ActiveWatcher from "@/components/activity/ActiveWatcher"
 
 export default {
+    components: { ActiveWatcher },
     name: "App",
     computed: {
-        ...mapGetters(["role"]),
+        ...mapGetters(["role", "loggedIn"]),
     },
     watch: {
         role(v) {
             if (v == Role.NotAuthorized) {
                 this.$router.push(`/login`)
             }
-        },
-    },
-    methods: {
-        setActive() {
-            this.$store.dispatch("refreshActive")
         },
     },
 }

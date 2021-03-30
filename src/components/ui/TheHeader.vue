@@ -10,10 +10,13 @@
 
 <script>
 import { Role } from "@/type/user"
+import { postLogout } from "@/api/auth"
 
 export default {
     methods: {
         logout() {
+            postLogout()
+            this.$store.dispatch("unauthorized")
             this.$router.push(`/login`)
         },
         order() {

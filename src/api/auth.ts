@@ -10,3 +10,17 @@ export async function postLogin(username: string, password: string) {
         credentials: "include",
     })
 }
+
+export async function postActive() {
+    return await fetch(apiEndpoint + `/active`, {
+        method: "POST",
+        credentials: "include",
+    })
+}
+
+export async function postLogout() {
+    return await fetch(apiEndpoint + `/logout`, {
+        method: "POST",
+        credentials: "include",
+    })
+}

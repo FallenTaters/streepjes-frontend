@@ -15,6 +15,12 @@ const store: Module<UserStore, object> = {
         role(state): string {
             return state.currentRole
         },
+        loggedIn(state): boolean {
+            return state.currentRole != Role.NotAuthorized
+        },
+        lastActive(state): Date {
+            return state.lastActive
+        },
     },
     mutations: {
         setRole(state, role: string) {
