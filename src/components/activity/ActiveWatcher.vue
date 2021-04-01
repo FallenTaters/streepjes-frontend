@@ -11,13 +11,13 @@
 <script>
 import { defineComponent } from "@vue/runtime-core"
 import { mapGetters } from "vuex"
-import { postActive, postLogout } from "@/api/auth"
+import { postActive } from "@/api/auth"
 
 const second = 1000
 const minute = 60 * second
 const maxTimeInactive = 5 * minute
 const warningTimeLeft = 3 * minute
-const timeBetweenCalls = 1 * minute
+const timeBetweenCalls = 0.5 * minute
 
 export default defineComponent({
     data() {
@@ -34,33 +34,21 @@ export default defineComponent({
         this.makeInterval()
     },
     computed: {
-        ...mapGetters(["loggedIn", "lastActive"]),
-    },
-    watch: {
-        loggedIn(v) {
-            if (v) {
-                this.makeInterval()
-            } else {
-                clearInterval(this.interval)
-            }
-        },
+        ...mapGetters(["lastActive"]),
     },
     methods: {
         calcTimeLeft() {
             this.timeLeft = maxTimeInactive - (new Date() - this.lastActive)
         },
-        async setActive() {
+        setActive() {
             this.$store.dispatch("refreshActive")
             this.calcTimeLeft()
             this.check()
         },
-        check() {
+        async check() {
             // check time left
             this.calcTimeLeft()
             if (this.timeLeft < 0) {
-                postLogout()
-                this.showWarning = false
-                clearInterval(this.interval)
                 this.$store.dispatch("unauthorized")
                 return
             } else if (this.timeLeft < warningTimeLeft) {
@@ -71,14 +59,16 @@ export default defineComponent({
 
             // check last call
             if (new Date() - this.lastActiveCall > timeBetweenCalls) {
-                postActive()
+                const resp = await postActive()
+                if (!resp.status || resp.status != 200) {
+                    this.$store.dispatch("unauthorized")
+                    return
+                }
+
                 this.lastActiveCall = new Date()
             }
         },
         makeInterval() {
-            if (!this.loggedIn) {
-                return
-            }
             this.interval = setInterval(() => {
                 this.check()
             }, 1000)
@@ -93,6 +83,9 @@ export default defineComponent({
 
             return `${minutes}:${seconds}`
         },
+    },
+    beforeUnmount() {
+        clearInterval(this.interval)
     },
 })
 </script>

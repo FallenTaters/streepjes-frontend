@@ -4,7 +4,7 @@
             @click="addToBill"
             class="square150"
             style="line-height: 3rem"
-            :disabled="!(selectedMember.id > 0)"
+            :disabled="selectedMember.id <= 0"
         >
             <h2>Add to Bill</h2>
         </base-button>
@@ -12,6 +12,7 @@
             @click="directPayment"
             class="square150"
             style="line-height: 2.7rem"
+            :disabled="selectedMember.id > 0"
         >
             <h2>Direct Payment</h2>
         </base-button>
@@ -57,6 +58,7 @@ import MemberInfo from "@/components/members/MemberInfo"
 import BaseButton from "@/components/ui/BaseButton.vue"
 import { renderPrice } from "@/type/catalog"
 import { postOrder } from "@/api/order"
+import { OrderStatus } from "@/type/order"
 
 export default {
     components: { MemberInfo, BaseButton },
@@ -69,7 +71,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(["selectedMember", "totalPrice"]),
+        ...mapGetters(["selectedMember", "totalPrice", "order"]),
         billTotal() {
             return renderPrice(this.totalPrice + this.selectedMember.debt)
         },
@@ -83,14 +85,25 @@ export default {
             this.showBill = true
         },
         directPayment() {
+            if (this.selectedMember.id > 0) {
+                return
+            }
             this.showModal = true
             this.showBill = false
         },
         renderPrice(price) {
             return renderPrice(price)
         },
-        confirm() {
-            const resp = postOrder()
+        async confirm() {
+            const o = Object.assign({}, this.order)
+            if (this.showBill) {
+                o.status = OrderStatus.Open
+            } else {
+                o.status = OrderStatus.Paid
+                o.member = null
+            }
+
+            const resp = await postOrder(o)
             switch (resp.status) {
                 case 200:
                     this.$store.dispatch("clearOrder")

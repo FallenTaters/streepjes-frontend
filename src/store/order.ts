@@ -3,21 +3,26 @@ import { Order, orderPrice, Orderline } from "@/type/order"
 import { Product } from "@/type/catalog"
 import { Module } from "vuex"
 
-const emptyMember: Member = {
-    id: 0,
-    club: Club.Unknown,
-    name: "",
-    debt: 0,
+function emptyMember(): Member {
+    return {
+        id: 0,
+        club: Club.Unknown,
+        name: "",
+        debt: 0,
+    }
 }
 
-const emptyOrder: Order = {
-    club: Club.Unknown,
-    orderlines: [],
-    member: emptyMember,
+function emptyOrder(): Order {
+    return {
+        club: Club.Unknown,
+        orderlines: [],
+        member: emptyMember(),
+        status: "",
+    }
 }
 
 const store: Module<Order, object> = {
-    state: emptyOrder,
+    state: emptyOrder(),
     getters: {
         club(state): Club {
             return state.club
@@ -33,6 +38,9 @@ const store: Module<Order, object> = {
         },
         totalPrice(state): number {
             return orderPrice(state)
+        },
+        order(state): Order {
+            return state
         },
     },
     mutations: {
@@ -58,7 +66,7 @@ const store: Module<Order, object> = {
             })
         },
         clearOrder(state) {
-            Object.assign(state, emptyOrder)
+            Object.assign(state, emptyOrder())
         },
     },
     actions: {
@@ -76,7 +84,7 @@ const store: Module<Order, object> = {
             commit("setMember", member)
         },
         unselectMember({ commit }) {
-            commit("setMember", emptyMember)
+            commit("setMember", emptyMember())
         },
         setClub({ commit }, club: Club) {
             commit("setClub", club)

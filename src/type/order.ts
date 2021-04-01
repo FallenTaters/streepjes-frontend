@@ -14,6 +14,7 @@ export interface Order {
     club: Club
     member: Member
     orderlines: Orderline[]
+    status: string
 }
 
 export function orderPrice(o: Order): number {
@@ -34,4 +35,11 @@ export function addProductToOrder(o: Order, p: Product) {
         product: p,
         amount: 1,
     })
+}
+
+export const OrderStatus = {
+    Open: "Open",
+    Billed: "Billed",
+    Paid: "Paid",
+    Cancelled: "Cancelled",
 }
