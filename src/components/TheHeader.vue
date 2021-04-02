@@ -1,10 +1,11 @@
 <template>
     <div id="header">
-        <div @click="order">Order</div>
-        <div v-if="showAdmin" @click="admin">Admin</div>
-        <div @click="logout">
-            Log Out
-        </div>
+        <div @click="order" v-if="isBartender">Order</div>
+        <div @click="history" v-if="isBartender">History</div>
+        <div @click="users" v-if="isAdmin">Users</div>
+        <div @click="members" v-if="isAdmin">Members</div>
+        <div @click="billing" v-if="isAdmin">Billing</div>
+        <div @click="logout">Log Out</div>
     </div>
 </template>
 
@@ -22,13 +23,25 @@ export default {
         order() {
             this.$router.push(`/`)
         },
-        admin() {
-            this.$router.push(`/admin`)
+        history() {
+            this.$router.push(`/history`)
+        },
+        users() {
+            this.$router.push(`/users`)
+        },
+        members() {
+            this.$router.push(`/members`)
+        },
+        billing() {
+            this.$router.push(`/billing`)
         },
     },
     computed: {
-        showAdmin() {
+        isAdmin() {
             return this.$store.getters.role == Role.Admin
+        },
+        isBartender() {
+            return this.$store.getters.role == Role.Bartender
         },
     },
 }
