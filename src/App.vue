@@ -111,4 +111,20 @@ body {
 .errorMessage {
     color: red;
 }
+
+.w-100 {
+    width: 100px;
+}
+.w-150 {
+    width: 150px;
+}
+.w-200 {
+    width: 200px;
+}
+.w-250 {
+    width: 250px;
+}
+.w-300 {
+    width: 300px;
+}
 </style>

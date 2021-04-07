@@ -29,13 +29,21 @@ export default {
             type: Boolean,
             default: false,
         },
+        club: {
+            type: Number,
+            default: null,
+        },
     },
     computed: {
         gladiators() {
-            return this.$store.getters.club == Club.Gladiators
+            return this.club
+                ? this.club == Club.Gladiators
+                : this.$store.getters.club == Club.Gladiators
         },
         parabool() {
-            return this.$store.getters.club == Club.Parabool
+            return this.club
+                ? this.club == Club.Parabool
+                : this.$store.getters.club == Club.Parabool
         },
     },
 }

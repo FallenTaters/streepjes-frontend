@@ -14,3 +14,16 @@ export async function postOrder(order: Order) {
         credentials: "include",
     })
 }
+
+export async function getOrders() {
+    return await fetch(apiEndpoint + `/orders`, {
+        credentials: "include",
+    })
+}
+
+export async function deleteOrder(id: number) {
+    return await fetch(apiEndpoint + `/order/delete/` + id, {
+        method: "POST",
+        credentials: "include",
+    })
+}

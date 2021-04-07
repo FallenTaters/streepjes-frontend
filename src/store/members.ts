@@ -17,6 +17,9 @@ const store: Module<MemberStore, object> = {
         byClub(state, getters) {
             return state.members.filter(mem => mem.club == getters.club)
         },
+        members(state) {
+            return state.members
+        },
     },
     mutations: {
         setMembers(state, members: Member[]) {

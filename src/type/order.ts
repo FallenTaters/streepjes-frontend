@@ -43,3 +43,16 @@ export const OrderStatus = {
     Paid: "Paid",
     Cancelled: "Cancelled",
 }
+
+export function renderDate(p: Date): string {
+    if (p.getDay() == new Date().getDay()) {
+        return `${p
+            .getHours()
+            .toString()
+            .padStart(2, "0")}:${p
+            .getMinutes()
+            .toString()
+            .padStart(2, "0")}`
+    }
+    return p.toDateString()
+}
