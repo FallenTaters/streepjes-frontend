@@ -91,7 +91,10 @@ export default defineComponent({
     },
     watch: {
         catalogLoadState(v) {
-            if (v == LoadState.Success) {
+            if (
+                v == LoadState.Success &&
+                this.$store.getters.categories.length > 0
+            ) {
                 this.selectedCategoryID = this.$store.getters.categories[0].id
             }
         },
