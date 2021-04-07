@@ -106,6 +106,10 @@ export default {
             const resp = await postOrder(o)
             switch (resp.status) {
                 case 200:
+                    if (this.selectedMember) {
+                        this.selectedMember.debt += this.totalPrice
+                    }
+
                     this.$store.dispatch("clearOrder")
                     return
                 case 401:

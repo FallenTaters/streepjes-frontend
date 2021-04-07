@@ -66,7 +66,9 @@ const store: Module<Order, object> = {
             })
         },
         clearOrder(state) {
-            Object.assign(state, emptyOrder())
+            state.orderlines = []
+            state.member = emptyMember()
+            state.status = ""
         },
     },
     actions: {
