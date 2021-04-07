@@ -3,6 +3,7 @@
         <div @click="order" v-if="isBartender">Order</div>
         <div @click="history" v-if="isBartender">History</div>
         <div @click="users" v-if="isAdmin">Users</div>
+        <div @click="members" v-if="isAdmin">Catalog</div>
         <div @click="members" v-if="isAdmin">Members</div>
         <div @click="billing" v-if="isAdmin">Billing</div>
         <div @click="logout">Log Out</div>

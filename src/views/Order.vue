@@ -70,6 +70,7 @@ export default defineComponent({
     created() {
         this.$store.dispatch("fetchCatalog")
         this.$store.dispatch("fetchMembers")
+        this.$store.dispatch("unselectMember")
     },
     data() {
         return {
