@@ -1,7 +1,7 @@
 import { apiEndpoint } from "./settings"
+import { doFetch } from "./type"
+import { Catalog } from "@/type/catalog"
 
 export async function getCatalog() {
-    return await fetch(apiEndpoint + `/catalog`, {
-        credentials: "include",
-    })
+    return await doFetch<Catalog>(apiEndpoint + "/catalog")
 }

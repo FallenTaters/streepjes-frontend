@@ -1,23 +1,31 @@
 <template>
     <the-header></the-header>
-    <h1>Recent Order History</h1>
+    <h1>Last Orders</h1>
     <h3 v-if="loadState == 'Loading'">Loading...</h3>
-    <div v-for="order in shownOrders" :key="order.id">
-        <base-button :club="order.club" @click="showOrderModal(order)">
-            <div class="flex-apart">
-                <div class="w-100">
-                    <span v-if="order.member">
-                        {{ order.member.name }}
-                    </span>
+    <div id="orders">
+        <div v-for="order in shownOrders" :key="order.id">
+            <base-button
+                :club="order.club"
+                @click="showOrderModal(order)"
+                :disabled="order.status == OrderStatus.Cancelled"
+                :margin="5"
+                :padding="9"
+            >
+                <div class="flex-apart">
+                    <div class="w-100">
+                        <span v-if="order.member">
+                            {{ order.member.name }}
+                        </span>
+                    </div>
+                    <div>
+                        {{ renderDate(order.orderDate) }}
+                    </div>
+                    <div class="w-200">
+                        {{ renderPrice(order.price) }}
+                    </div>
                 </div>
-                <div>
-                    {{ renderDate(order.orderDate) }}
-                </div>
-                <div class="w-200">
-                    {{ renderPrice(order.price) }}
-                </div>
-            </div>
-        </base-button>
+            </base-button>
+        </div>
     </div>
     <modal v-if="selectedOrder">
         <div>
@@ -26,12 +34,14 @@
                     ← Back
                 </button>
                 <button
-                    @click="deleteOrder"
+                    v-if="selectedOrder.status != OrderStatus.Cancelled"
+                    @click="doDeleteOrder"
                     class="badge-link"
-                    style="background-color:darkred"
+                    style="background-color: darkred"
                 >
                     Delete
                 </button>
+                <div v-else class="deleted">Deleted</div>
             </div>
             <h3>
                 {{
@@ -47,7 +57,7 @@
                     class="flex-apart"
                 >
                     <div>
-                        <span style="margin-right:30px; font-weight: bold;">
+                        <span style="margin-right: 30px; font-weight: bold">
                             {{ ol.amount }}x
                         </span>
                         <span>
@@ -68,110 +78,89 @@
     </modal>
 </template>
 
-<script>
-import TheHeader from "@/components/TheHeader.vue"
+<script lang="ts">
+import { defineComponent, ref, computed } from "vue"
+
+import { useStore } from "@/store/index"
 import { getOrders, deleteOrder } from "@/api/order"
 import { LoadState } from "@/api/type"
-import BaseButton from "@/components/ui/BaseButton.vue"
-import { mapGetters } from "vuex"
 import { renderPrice, productPrice } from "@/type/catalog"
-import { renderDate } from "@/type/order"
+import { Order, OrderStatus } from "@/type/order"
+import { renderDate } from "@/type/time"
 
-export default {
-    components: { TheHeader, BaseButton },
-    data() {
-        return {
-            orders: [],
-            loadState: LoadState.Loading,
-            selectedOrder: null,
-        }
-    },
-    computed: {
-        ...mapGetters(["members"]),
-        shownOrders() {
-            return this.orders.slice(0, 10)
-        },
-    },
-    methods: {
-        processOrders() {
-            this.orders.forEach(o => {
-                if (typeof o.orderDate == "string") {
-                    o.orderDate = new Date(o.orderDate)
-                }
+import TheHeader from "@/components/TheHeader.vue"
+import BaseButton from "@/components/ui/BaseButton.vue"
 
-                if (typeof o.member == "undefined") {
-                    o.member = this.members.find(m => m.id == o.memberId)
-                }
+export default defineComponent({
+    setup() {
+        const store = useStore()
+
+        // fetch orders
+        const selectedOrder = ref<null | Order>(null)
+        const orders = ref<Order[]>([])
+        const loadState = ref<LoadState>(LoadState.Loading)
+        const shownOrders = computed<Order[]>(() => orders.value.slice(0, 10))
+
+        async function processOrders() {
+            loadState.value = LoadState.Failed
+            orders.value = await getOrders(store.getters.members).catch(() => {
+                store.dispatch("unauthorized")
+                loadState.value = LoadState.Failed
+                return []
             })
+            orders.value.sort((o) => (o.orderDate ? -o.orderDate.getTime() : 0))
+            loadState.value = LoadState.Success
+        }
+        processOrders()
 
-            this.orders.sort((a, b) => b.orderDate - a.orderDate)
-        },
-        renderPrice(p) {
-            return renderPrice(p)
-        },
-        renderDate(d) {
-            return renderDate(d)
-        },
-        productPrice(p, c) {
-            return productPrice(p, c)
-        },
-        showOrderModal(o) {
-            this.selectedOrder = o
-            this.selectedOrder.orderlines = JSON.parse(
-                this.selectedOrder.contents
-            )
-        },
-        async deleteOrder() {
-            this.disableDeleteButton = true
-            if (!this.selectedOrder) {
-                this.disableDeleteButton = false
-                return
-            }
-
-            let resp
-            try {
-                resp = await deleteOrder(this.selectedOrder.id)
-            } catch {
-                this.disableDeleteButton = false
-                return
-            }
-
-            if (resp.status == 200) {
-                this.orders = this.orders.filter(o => o != this.selectedOrder)
-                this.selectedOrder = null
-            }
-
-            this.disableDeleteButton = false
-            return
-        },
-    },
-    async created() {
-        let resp
-        try {
-            resp = await getOrders()
-        } catch {
-            this.loadState = LoadState.Failed
+        // modal
+        function showOrderModal(o: Order) {
+            selectedOrder.value = o
         }
 
-        let data
-        switch (resp.status) {
-            case 200:
-                data = await resp.json()
-                break
+        const disableDeleteButton = ref<boolean>(false)
 
-            case 401:
-                this.$store.dispatch("unauthorized")
+        async function doDeleteOrder() {
+            disableDeleteButton.value = true
+            if (!selectedOrder.value) {
+                disableDeleteButton.value = false
                 return
+            }
 
-            default:
-                this.loadState = LoadState.Failed
-                return
+            const orderId = selectedOrder.value.id ? selectedOrder.value.id : 0
+            await deleteOrder(orderId)
+                .then(() => {
+                    if (!selectedOrder.value) {
+                        return
+                    }
+                    selectedOrder.value.status = OrderStatus.Cancelled
+                    selectedOrder.value = null
+                })
+                .catch(() => {
+                    store.dispatch("unauthorized")
+                })
+
+            disableDeleteButton.value = false
         }
 
-        this.orders = data
-        this.processOrders()
+        return {
+            OrderStatus,
+
+            renderPrice,
+            productPrice,
+            renderDate,
+
+            selectedOrder,
+            shownOrders,
+            loadState,
+            disableDeleteButton,
+
+            showOrderModal,
+            doDeleteOrder,
+        }
     },
-}
+    components: { TheHeader, BaseButton },
+})
 </script>
 
 <style scoped>
@@ -179,6 +168,14 @@ export default {
     height: 250px;
     overflow: auto;
 }
+#orders {
+    height: 500px;
+    overflow: auto;
+    font-size: 0.9em;
+}
+.deleted {
+    color: darkred;
+    font-weight: bold;
+    padding: 10px;
+}
 </style>
-
-TheHeader

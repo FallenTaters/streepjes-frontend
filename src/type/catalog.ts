@@ -4,6 +4,11 @@ export function renderPrice(price: number): string {
     return `€ ${(price / 100).toFixed(2)}`
 }
 
+export interface Catalog {
+    categories: Category[]
+    products: Product[]
+}
+
 export interface Category {
     id: number
     name: string

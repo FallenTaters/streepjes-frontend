@@ -11,20 +11,28 @@
     </div>
 </template>
 
-<script>
-import { mapGetters } from "vuex"
+<script lang="ts">
+import { computed, defineComponent } from "vue"
+import { useStore } from "@/store/index"
+import { Category } from "@/type/catalog"
 
-export default {
-    props: ["modelValue"], // value is categoryID
-    computed: {
-        ...mapGetters(["categories"]),
+export default defineComponent({
+    props: ["modelValue"],
+    setup(_, { emit }) {
+        const store = useStore()
+
+        const categories = computed<Category[]>(() => store.getters.categories)
+
+        function selectCategory(id: number) {
+            emit("update:modelValue", id)
+        }
+
+        return {
+            categories,
+            selectCategory,
+        }
     },
-    methods: {
-        selectCategory(id) {
-            this.$emit("update:modelValue", id)
-        },
-    },
-}
+})
 </script>
 
 <style></style>

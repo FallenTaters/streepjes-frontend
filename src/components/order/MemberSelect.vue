@@ -33,47 +33,63 @@
     </div>
 </template>
 
-<script>
-import { mapGetters } from "vuex"
-import MemberInfo from "@/components/members/MemberInfo"
+<script lang="ts">
+import { defineComponent, ref, computed } from "vue"
+import { useStore } from "@/store/index"
+import { Member } from "@/type/member"
+import MemberInfo from "@/components/members/MemberInfo.vue"
 
-export default {
-    components: { MemberInfo },
-    data() {
-        return {
-            searchString: "",
-            showModal: false,
-        }
-    },
-    computed: {
-        ...mapGetters(["selectedMember", "memberSelected", "club"]),
-        members() {
-            let members = this.$store.getters.byClub
+export default defineComponent({
+    setup() {
+        const store = useStore()
 
-            if (this.searchString) {
-                const search = this.searchString.toLowerCase()
-                members = members.filter(member =>
+        const searchString = ref<string>("")
+        const showModal = ref<boolean>(false)
+
+        const selectedMember = computed(() => store.getters.selectedMember)
+        const memberSelected = computed(() => store.getters.memberSelected)
+        const club = computed(() => store.getters.club)
+
+        const members = computed(() => {
+            let members: Member[] = store.getters.byClub
+
+            if (searchString.value) {
+                const search = searchString.value.toLowerCase()
+                members = members.filter((member) =>
                     member.name.toLowerCase().includes(search)
                 )
             }
 
             return members
-        },
-    },
-    methods: {
-        click() {
-            if (this.memberSelected) {
-                this.$store.dispatch("unselectMember")
+        })
+
+        function click() {
+            if (memberSelected.value) {
+                store.dispatch("unselectMember")
                 return
             }
-            this.showModal = true
-        },
-        selectMember(member) {
-            this.$store.dispatch("selectMember", member)
-            this.showModal = false
-        },
+            showModal.value = true
+        }
+
+        function selectMember(member: Member) {
+            store.dispatch("selectMember", member)
+            showModal.value = false
+        }
+
+        return {
+            searchString,
+            showModal,
+            selectedMember,
+            memberSelected,
+            club,
+            members,
+
+            click,
+            selectMember,
+        }
     },
-}
+    components: { MemberInfo },
+})
 </script>
 
 <style scoped>

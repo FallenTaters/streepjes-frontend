@@ -3,72 +3,74 @@ import { Order, orderPrice, Orderline } from "@/type/order"
 import { Product } from "@/type/catalog"
 import { Module } from "vuex"
 
-function emptyMember(): Member {
-    return {
-        id: 0,
-        club: Club.Unknown,
-        name: "",
-        debt: 0,
-    }
-}
-
 function emptyOrder(): Order {
     return {
+        id: undefined,
         club: Club.Unknown,
         orderlines: [],
-        member: emptyMember(),
+        member: null,
         status: "",
+        bartender: undefined,
+        orderDate: undefined,
+        statusDate: undefined,
+        price: undefined,
     }
 }
 
-const store: Module<Order, object> = {
-    state: emptyOrder(),
+export interface OrderState {
+    order: Order
+}
+
+export const orderStore: Module<OrderState, object> = {
+    state: { order: emptyOrder() },
     getters: {
         club(state): Club {
-            return state.club
+            return state.order.club
         },
         orderlines(state): Orderline[] {
-            return state.orderlines
+            return state.order.orderlines
         },
-        selectedMember(state): Member {
-            return state.member
+        selectedMember(state): Member | null {
+            return state.order.member
         },
         memberSelected(state): boolean {
-            return state.member.id != 0
+            return !!state.order.member
         },
         totalPrice(state): number {
-            return orderPrice(state)
+            return orderPrice(state.order)
         },
         order(state): Order {
-            return state
+            return state.order
         },
     },
     mutations: {
         setMember(state, member: Member) {
-            state.member = member
+            state.order.member = member
         },
         removeOrderline(state, orderline: Orderline) {
-            state.orderlines = state.orderlines.filter(ol => ol != orderline)
+            state.order.orderlines = state.order.orderlines.filter(
+                ol => ol != orderline
+            )
         },
         setClub(state, club: Club) {
-            state.club = club
+            state.order.club = club
         },
         addProduct(state, product: Product) {
-            for (const ol of state.orderlines) {
+            for (const ol of state.order.orderlines) {
                 if (ol.product.id === product.id) {
                     ol.amount++
                     return
                 }
             }
-            state.orderlines.push({
+            state.order.orderlines.push({
                 amount: 1,
                 product: product,
             })
         },
         clearOrder(state) {
-            state.orderlines = []
-            state.member = emptyMember()
-            state.status = ""
+            state.order.orderlines = []
+            state.order.member = null
+            state.order.status = ""
         },
     },
     actions: {
@@ -86,7 +88,7 @@ const store: Module<Order, object> = {
             commit("setMember", member)
         },
         unselectMember({ commit }) {
-            commit("setMember", emptyMember())
+            commit("setMember", undefined)
         },
         setClub({ commit }, club: Club) {
             commit("setClub", club)
@@ -96,5 +98,3 @@ const store: Module<Order, object> = {
         },
     },
 }
-
-export default store

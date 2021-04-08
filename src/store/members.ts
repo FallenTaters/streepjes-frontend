@@ -3,12 +3,12 @@ import { Module } from "vuex"
 import { getMembers } from "@/api/members"
 import { LoadState } from "@/api/type"
 
-interface MemberStore {
+export interface MemberState {
     members: Member[]
     loadState: LoadState
 }
 
-const store: Module<MemberStore, object> = {
+export const memberStore: Module<MemberState, object> = {
     state: {
         members: [],
         loadState: LoadState.NotLoaded,
@@ -62,5 +62,3 @@ const store: Module<MemberStore, object> = {
         },
     },
 }
-
-export default store

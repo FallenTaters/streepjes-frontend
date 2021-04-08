@@ -2,19 +2,19 @@
     <div class="flex-even">
         <base-button
             @click="addToBill"
-            class="square150"
+            class="paymentButton"
             style="line-height: 3rem"
-            :disabled="selectedMember.id <= 0"
+            :disabled="!selectedMember"
         >
-            <h2>Add to Bill</h2>
+            <h2>Member</h2>
         </base-button>
         <base-button
             @click="directPayment"
-            class="square150"
+            class="paymentButton"
             style="line-height: 2.7rem"
-            :disabled="selectedMember.id > 0"
+            :disabled="selectedMember && selectedMember.id > 0"
         >
-            <h2>Direct Payment</h2>
+            <h2>Anonymous</h2>
         </base-button>
         <modal v-if="showModal">
             <div class="flex-apart">
@@ -26,7 +26,7 @@
                 </div>
                 <div></div>
             </div>
-            <div style="padding: 30px; text-align: left; height: 200px;">
+            <div style="padding: 30px; text-align: left; height: 200px">
                 <div v-if="showBill">
                     <member-info :member="selectedMember"> </member-info>
                     <div>Amount: {{ renderPrice(totalPrice) }}</div>
@@ -37,12 +37,10 @@
                     <p>
                         <b>Amount: {{ renderPrice(totalPrice) }}</b>
                     </p>
-                    <p>
-                        Use the PIN machine or cash to fulfill the payment.
-                    </p>
+                    <p>Use the PIN machine or cash to fulfill the payment.</p>
                 </div>
             </div>
-            <div style="margin-top: 10px;">
+            <div style="margin-top: 10px">
                 <base-button @click="confirm">Confirm</base-button>
             </div>
             <div class="errorMessage">
@@ -52,81 +50,112 @@
     </div>
 </template>
 
-<script>
-import { mapGetters } from "vuex"
-import MemberInfo from "@/components/members/MemberInfo"
+<script lang="ts">
+import { ref, computed, defineComponent } from "vue"
+
+import MemberInfo from "@/components/members/MemberInfo.vue"
 import BaseButton from "@/components/ui/BaseButton.vue"
+
 import { renderPrice } from "@/type/catalog"
 import { postOrder } from "@/api/order"
 import { OrderStatus } from "@/type/order"
+import { Member } from "@/type/member"
+import { useStore } from "@/store/index"
 
-export default {
-    components: { MemberInfo, BaseButton },
-    data() {
-        return {
-            showModal: false,
-            showBill: false,
-            errorMsg: "",
-            timeOut: null,
+export default defineComponent({
+    setup() {
+        const store = useStore()
+
+        const selectedMember = computed<Member | null>(
+            () => store.getters.selectedMember
+        )
+        const totalPrice = computed<number>(() => store.getters.totalPrice)
+
+        // bill
+        const showBill = ref<boolean>(false)
+
+        const billTotal = computed<string>(() => {
+            const debt = selectedMember.value ? selectedMember.value.debt : 0
+            return renderPrice(totalPrice.value + debt)
+        })
+
+        // buttons
+        const showModal = ref<boolean>(false)
+
+        function addToBill() {
+            if (!selectedMember.value) {
+                return
+            }
+            showModal.value = true
+            showBill.value = true
         }
-    },
-    computed: {
-        ...mapGetters(["selectedMember", "totalPrice", "order"]),
-        billTotal() {
-            return renderPrice(this.totalPrice + this.selectedMember.debt)
-        },
-    },
-    methods: {
-        addToBill() {
-            if (!this.selectedMember.id || this.selectedMember.id == 0) {
+
+        function directPayment() {
+            if (selectedMember.value) {
                 return
             }
-            this.showModal = true
-            this.showBill = true
-        },
-        directPayment() {
-            if (this.selectedMember.id > 0) {
-                return
-            }
-            this.showModal = true
-            this.showBill = false
-        },
-        renderPrice(price) {
-            return renderPrice(price)
-        },
-        async confirm() {
-            const o = Object.assign({}, this.order)
-            if (this.showBill) {
+            showModal.value = true
+            showBill.value = false
+        }
+
+        // confirm
+        const errorMsg = ref<string>("")
+        let timeOut: number
+
+        function errorMessage(msg: string) {
+            clearTimeout(timeOut)
+            errorMsg.value = msg
+            timeOut = setTimeout(() => (errorMsg.value = ""), 10000)
+        }
+
+        async function confirm() {
+            const o = Object.assign({}, store.getters.order)
+            if (showBill.value) {
                 o.status = OrderStatus.Open
             } else {
                 o.status = OrderStatus.Paid
                 o.member = null
             }
 
-            const resp = await postOrder(o)
-            switch (resp.status) {
-                case 200:
-                    if (this.selectedMember) {
-                        this.selectedMember.debt += this.totalPrice
+            postOrder(o)
+                .then(() => {
+                    if (selectedMember.value) {
+                        selectedMember.value.debt += totalPrice.value
                     }
+                    store.dispatch("clearOrder")
+                })
+                .catch(() => {
+                    errorMessage("Unable to place order")
+                })
+        }
 
-                    this.$store.dispatch("clearOrder")
-                    return
-                case 401:
-                    this.$store.dispatch("unauthorized")
-                    return
-                default:
-                    this.errorMessage("Unable to place order")
-                    return
-            }
-        },
-        errorMessage(msg) {
-            clearTimeout(this.timeOut)
-            this.errorMsg = msg
-            this.timeOut = setTimeout(() => (this.errorMsg = ""), 10000)
-        },
+        return {
+            selectedMember,
+            totalPrice,
+
+            errorMsg,
+            showModal,
+            showBill,
+            billTotal,
+
+            renderPrice,
+
+            addToBill,
+            directPayment,
+            confirm,
+        }
     },
-}
+    components: { MemberInfo, BaseButton },
+})
 </script>
 
-<style></style>
+<style scoped>
+.paymentButton {
+    padding: 15px;
+    height: 50px;
+    width: 200px;
+}
+.paymentButton > h2 {
+    margin: 0px;
+}
+</style>

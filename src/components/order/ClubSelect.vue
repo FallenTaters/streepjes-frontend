@@ -1,51 +1,60 @@
 <template>
     <div @click="toggleClub">
-        <img :alt="alt" :src="src" class="square200" />
+        <img :alt="alt" :src="src" class="square150" />
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import { computed, defineComponent } from "vue"
 import { Club } from "@/type/member"
+import { useStore } from "@/store/index"
 
-export default {
-    methods: {
-        toggleClub() {
-            this.$store.dispatch("unselectMember")
-            if (this.club != Club.Gladiators) {
-                this.$store.dispatch("setClub", Club.Gladiators)
+export default defineComponent({
+    setup() {
+        const store = useStore()
+
+        const club = computed(() => store.getters.club)
+
+        function toggleClub() {
+            store.dispatch("unselectMember")
+            if (club.value != Club.Gladiators) {
+                store.dispatch("setClub", Club.Gladiators)
                 return
             }
-            this.$store.dispatch("setClub", Club.Parabool)
-        },
-    },
-    computed: {
-        club() {
-            return this.$store.getters.club
-        },
-        alt() {
-            switch (this.club) {
+            store.dispatch("setClub", Club.Parabool)
+        }
+
+        const alt = computed(() => {
+            switch (club.value) {
                 case Club.Parabool:
                     return "GSKV de Parabool"
                 case Club.Gladiators:
                     return "Lacrosse Groningen Gladiators"
                 default:
-                    this.toggleClub()
+                    toggleClub()
                     return ""
             }
-        },
-        src() {
-            switch (this.club) {
+        })
+
+        const src = computed(() => {
+            switch (club.value) {
                 case Club.Parabool:
                     return require("@/assets/paraboologo.jpg")
                 case Club.Gladiators:
                     return require("@/assets/gladiatorslogo.jpg")
                 default:
-                    this.toggleClub()
+                    toggleClub()
                     return ""
             }
-        },
+        })
+
+        return {
+            alt,
+            src,
+            toggleClub,
+        }
     },
-}
+})
 </script>
 
 <style scoped></style>

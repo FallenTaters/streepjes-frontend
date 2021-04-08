@@ -1,5 +1,12 @@
 import { apiEndpoint } from "./settings"
-import { Order, orderPrice } from "@/type/order"
+import { Member } from "@/type/member"
+import {
+    Order,
+    OrderPayload,
+    orderPrice,
+    orderPayloadToOrder,
+} from "@/type/order"
+import { doFetch } from "./type"
 
 export async function postOrder(order: Order) {
     return await fetch(apiEndpoint + `/order`, {
@@ -15,9 +22,13 @@ export async function postOrder(order: Order) {
     })
 }
 
-export async function getOrders() {
-    return await fetch(apiEndpoint + `/orders`, {
-        credentials: "include",
+export async function getOrders(members: Member[]): Promise<Order[]> {
+    return doFetch<OrderPayload[]>(apiEndpoint + "/orders").then(payload => {
+        const orders: Order[] = []
+        payload.forEach(p => {
+            orders.push(orderPayloadToOrder(p, members))
+        })
+        return orders
     })
 }
 

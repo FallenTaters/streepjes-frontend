@@ -29,13 +29,17 @@
                     <b>x{{ orderline.amount }}</b>
                 </div>
                 <div>{{ orderline.product.name }}</div>
-                <div>{{ olPrice(orderline) }}</div>
+                <div>
+                    {{ renderPrice(orderlinePrice(orderline, club)) }}
+                </div>
             </base-button>
         </div>
+
         <club-select />
         <member-select />
-        <div id="bill-summary">
-            <div class="flex-apart" style="padding: 0 30px">
+
+        <div>
+            <div class="flex-apart paymentTotal">
                 <h2>Total</h2>
                 <h2>{{ renderPrice(totalPrice) }}</h2>
             </div>
@@ -44,21 +48,79 @@
     </div>
 </template>
 
-<script>
-import { mapGetters } from "vuex"
+<script lang="ts">
+import { defineComponent, ref, computed, watch } from "vue"
+
 import ClubSelect from "@/components/order/ClubSelect.vue"
 import MemberSelect from "@/components/order/MemberSelect.vue"
 import CategoryList from "@/components/catalog/CategoryList.vue"
 import ProductList from "@/components/catalog/ProductList.vue"
 import TheHeader from "@/components/TheHeader.vue"
-import { Club } from "@/type/member"
-import { LoadState } from "@/api/type"
-import { defineComponent } from "vue"
-import { renderPrice } from "@/type/catalog"
-import { orderlinePrice } from "@/type/order"
 import PaymentButtons from "@/components/order/PaymentButtons.vue"
 
+import { Club } from "@/type/member"
+import { LoadState } from "@/api/type"
+import { renderPrice, Product } from "@/type/catalog"
+import { orderlinePrice, Orderline } from "@/type/order"
+import { useStore } from "@/store/index"
+
 export default defineComponent({
+    setup() {
+        const store = useStore()
+        // fetch stuff
+        store.dispatch("fetchCatalog")
+        store.dispatch("fetchMembers")
+        store.dispatch("unselectMember")
+
+        // map getters
+        const catalogLoadState = computed<LoadState>(
+            () => store.getters.catalogLoadState
+        )
+        const club = computed<Club>(() => store.getters.club)
+        const orderlines = computed<Club>(() => store.getters.orderlines)
+        const totalPrice = computed<Club>(() => store.getters.totalPrice)
+
+        // category selection
+        const selectedCategoryID = ref<number>(0)
+
+        watch(catalogLoadState, (v) => {
+            if (v == LoadState.Success && store.getters.categories.length > 0) {
+                selectedCategoryID.value = store.getters.categories[0].id
+            }
+        })
+
+        // product selection
+        function addProduct(product: Product) {
+            store.dispatch("addProduct", product)
+        }
+
+        function removeProduct(orderline: Orderline) {
+            store.dispatch("removeFromOrderline", orderline)
+        }
+
+        // payment
+        const readyToPay = computed<boolean>(
+            () => club.value != Club.Unknown && totalPrice.value > 0
+        )
+
+        return {
+            LoadState,
+
+            catalogLoadState,
+            club,
+            selectedCategoryID,
+            orderlines,
+            totalPrice,
+
+            readyToPay,
+
+            renderPrice,
+            orderlinePrice,
+
+            removeProduct,
+            addProduct,
+        }
+    },
     components: {
         ClubSelect,
         CategoryList,
@@ -67,65 +129,24 @@ export default defineComponent({
         MemberSelect,
         PaymentButtons,
     },
-    created() {
-        this.$store.dispatch("fetchCatalog")
-        this.$store.dispatch("fetchMembers")
-        this.$store.dispatch("unselectMember")
-    },
-    data() {
-        return {
-            selectedCategoryID: 0,
-            LoadState,
-        }
-    },
-    computed: {
-        ...mapGetters([
-            "orderlines",
-            "club",
-            "selectedMember",
-            "totalPrice",
-            "catalogLoadState",
-        ]),
-        readyToPay() {
-            return this.club != Club.Unknown && this.totalPrice > 0
-        },
-    },
-    watch: {
-        catalogLoadState(v) {
-            if (
-                v == LoadState.Success &&
-                this.$store.getters.categories.length > 0
-            ) {
-                this.selectedCategoryID = this.$store.getters.categories[0].id
-            }
-        },
-    },
-    methods: {
-        renderPrice,
-        selectCategory(id) {
-            this.selectedCategoryID = id
-        },
-        addProduct(product) {
-            this.$store.dispatch("addProduct", product)
-        },
-        removeProduct(orderline) {
-            this.$store.dispatch("removeFromOrderline", orderline)
-        },
-        olPrice(ol) {
-            return renderPrice(orderlinePrice(ol, this.club))
-        },
-    },
 })
 </script>
 
 <style scoped>
 .container {
-    height: 87vh;
+    height: 94vh;
     justify-content: stretch;
     margin-left: auto;
     margin-right: auto;
     display: grid;
     grid-template-columns: 20% 35% 45%;
     grid-template-rows: 10% 65% 25%;
+}
+
+.paymentTotal {
+    margin: 0 20px;
+}
+.paymentTotal > h2 {
+    margin: 0px;
 }
 </style>

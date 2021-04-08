@@ -1,12 +1,12 @@
 import { Module } from "vuex"
 import { Role } from "@/type/user"
 
-interface UserStore {
+export interface UserState {
     currentRole: string
     lastActive: Date
 }
 
-const store: Module<UserStore, object> = {
+export const userStore: Module<UserState, object> = {
     state: {
         currentRole: Role.NotAuthorized,
         lastActive: new Date(),
@@ -42,5 +42,3 @@ const store: Module<UserStore, object> = {
         },
     },
 }
-
-export default store

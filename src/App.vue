@@ -11,25 +11,37 @@
     </div>
 </template>
 
-<script>
-import { mapGetters } from "vuex"
-import { Role } from "@/type/user"
-import ActiveWatcher from "@/components/activity/ActiveWatcher"
+<script lang="ts">
+import { defineComponent, computed, watch } from "vue"
+import { useRouter } from "vue-router"
 
-export default {
+import { useStore } from "@/store/index"
+import { Role } from "@/type/user"
+
+import ActiveWatcher from "@/components/activity/ActiveWatcher.vue"
+
+export default defineComponent({
     components: { ActiveWatcher },
     name: "App",
-    computed: {
-        ...mapGetters(["role", "loggedIn"]),
-    },
-    watch: {
-        role(v) {
+    setup() {
+        const store = useStore()
+        const router = useRouter()
+
+        const loggedIn = computed<boolean>(() => store.getters.loggedIn)
+        const role = computed<string>(() => store.getters.role)
+
+        // route to login on unauthorized
+        watch<string>(role, v => {
             if (v == Role.NotAuthorized) {
-                this.$router.push(`/login`)
+                router.push(`/login`)
             }
-        },
+        })
+
+        return {
+            loggedIn,
+        }
     },
-}
+})
 </script>
 
 <style>

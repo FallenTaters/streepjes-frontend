@@ -12,9 +12,47 @@ export function orderlinePrice(ol: Orderline, c: Club): number {
 
 export interface Order {
     club: Club
-    member: Member
     orderlines: Orderline[]
+    member: Member | null
+
+    id: number | undefined
+    bartender: string | undefined
+    orderDate: Date | undefined
+    status: string | undefined
+    statusDate: Date | undefined
+    price: number | undefined
+}
+
+export interface OrderPayload {
+    id: number
+    club: Club
+    bartender: string
+    memberId: number
+    contents: string
+    price: number
+    orderDate: string
     status: string
+    statusDate: string
+}
+
+export function orderPayloadToOrder(
+    payload: OrderPayload,
+    members: Member[]
+): Order {
+    const foundMember = members.find(m => (m.id = payload.memberId))
+    const member = foundMember ? foundMember : null
+
+    return {
+        id: payload.id,
+        club: payload.club,
+        bartender: payload.bartender,
+        member: member,
+        orderlines: JSON.parse(payload.contents),
+        orderDate: new Date(payload.orderDate),
+        status: payload.status,
+        statusDate: new Date(payload.statusDate),
+        price: payload.price,
+    }
 }
 
 export function orderPrice(o: Order): number {
@@ -42,17 +80,4 @@ export const OrderStatus = {
     Billed: "Billed",
     Paid: "Paid",
     Cancelled: "Cancelled",
-}
-
-export function renderDate(p: Date): string {
-    if (p.getDay() == new Date().getDay()) {
-        return `${p
-            .getHours()
-            .toString()
-            .padStart(2, "0")}:${p
-            .getMinutes()
-            .toString()
-            .padStart(2, "0")}`
-    }
-    return p.toDateString()
 }

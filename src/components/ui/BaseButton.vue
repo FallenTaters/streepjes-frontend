@@ -8,14 +8,42 @@
             bordered: bordered,
             disabled: disabled,
         }"
+        :style="style"
     >
         <slot></slot>
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, computed } from "vue"
+import { useStore } from "@/store/index"
 import { Club } from "@/type/member"
-export default {
+export default defineComponent({
+    setup(props) {
+        const store = useStore()
+
+        const gladiators = computed(() => {
+            return props.club
+                ? props.club == Club.Gladiators
+                : store.getters.club == Club.Gladiators
+        })
+
+        const parabool = computed(() => {
+            return props.club
+                ? props.club == Club.Parabool
+                : store.getters.club == Club.Parabool
+        })
+
+        const style = computed(() => {
+            return `margin:${props.margin}px;padding:${props.padding}px;`
+        })
+
+        return {
+            gladiators,
+            parabool,
+            style,
+        }
+    },
     props: {
         selected: {
             type: Boolean,
@@ -33,26 +61,20 @@ export default {
             type: Number,
             default: null,
         },
-    },
-    computed: {
-        gladiators() {
-            return this.club
-                ? this.club == Club.Gladiators
-                : this.$store.getters.club == Club.Gladiators
+        margin: {
+            type: Number,
+            default: 10,
         },
-        parabool() {
-            return this.club
-                ? this.club == Club.Parabool
-                : this.$store.getters.club == Club.Parabool
+        padding: {
+            type: Number,
+            default: 15,
         },
     },
-}
+})
 </script>
 
 <style scoped>
 .card {
-    margin: 10px;
-    padding: 15px;
     border-radius: 15px;
     overflow: hidden;
 }

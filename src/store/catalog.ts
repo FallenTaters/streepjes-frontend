@@ -3,13 +3,13 @@ import { Category, Product } from "@/type/catalog"
 import { getCatalog } from "@/api/catalog"
 import { LoadState } from "@/api/type"
 
-interface CatalogStore {
+export interface CatalogState {
     loadState: LoadState
     categories: Category[]
     products: Product[]
 }
 
-const store: Module<CatalogStore, object> = {
+export const catalogStore: Module<CatalogState, object> = {
     state: {
         loadState: LoadState.NotLoaded,
         categories: [],
@@ -41,35 +41,16 @@ const store: Module<CatalogStore, object> = {
         async fetchCatalog({ commit, dispatch }) {
             commit("setCatalogLoadState", LoadState.Loading)
 
-            let resp
-            try {
-                resp = await getCatalog()
-            } catch {
-                commit("setCatalogLoadState", LoadState.Failed)
-                return
-            }
-
-            let data
-            switch (resp.status) {
-                case 200:
-                    data = await resp.json()
-                    break
-
-                case 401:
+            getCatalog()
+                .then(catalog => {
+                    commit("setCategories", catalog.categories)
+                    commit("setProducts", catalog.products)
+                    commit("setCatalogLoadState", LoadState.Success)
+                })
+                .catch(() => {
                     dispatch("unauthorized")
                     commit("setCatalogLoadState", LoadState.Failed)
-                    return
-
-                default:
-                    commit("setCatalogLoadState", LoadState.Failed)
-                    return
-            }
-
-            commit("setCategories", data.categories)
-            commit("setProducts", data.products)
-            commit("setCatalogLoadState", LoadState.Success)
+                })
         },
     },
 }
-
-export default store

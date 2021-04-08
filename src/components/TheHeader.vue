@@ -10,42 +10,65 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import { computed, defineComponent } from "vue"
+import { useRouter } from "vue-router"
+import { useStore } from "@/store/index"
 import { Role } from "@/type/user"
 import { postLogout } from "@/api/auth"
 
-export default {
-    methods: {
-        logout() {
+export default defineComponent({
+    setup() {
+        const store = useStore()
+        const router = useRouter()
+
+        const isAdmin = computed<boolean>(
+            () => store.getters.role == Role.Admin
+        )
+
+        const isBartender = computed<boolean>(
+            () => store.getters.role == Role.Bartender
+        )
+
+        function logout() {
             postLogout()
-            this.$store.dispatch("unauthorized")
-            this.$router.push(`/login`)
-        },
-        order() {
-            this.$router.push(`/`)
-        },
-        history() {
-            this.$router.push(`/history`)
-        },
-        users() {
-            this.$router.push(`/users`)
-        },
-        members() {
-            this.$router.push(`/members`)
-        },
-        billing() {
-            this.$router.push(`/billing`)
-        },
+            store.dispatch("unauthorized")
+            router.push(`/login`)
+        }
+
+        function order() {
+            router.push("/")
+        }
+
+        function history() {
+            router.push("/history")
+        }
+
+        function users() {
+            router.push("/users")
+        }
+
+        function members() {
+            router.push("/members")
+        }
+
+        function billing() {
+            router.push("/billing")
+        }
+
+        return {
+            isAdmin,
+            isBartender,
+
+            logout,
+            order,
+            history,
+            users,
+            members,
+            billing,
+        }
     },
-    computed: {
-        isAdmin() {
-            return this.$store.getters.role == Role.Admin
-        },
-        isBartender() {
-            return this.$store.getters.role == Role.Bartender
-        },
-    },
-}
+})
 </script>
 
 <style scoped>

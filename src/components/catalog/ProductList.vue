@@ -7,36 +7,45 @@
             @click="clickProduct(product)"
         >
             <div>{{ product.name }}</div>
-            <div>{{ price(product) }}</div>
+            <div>{{ renderPrice(productPrice(product, club)) }}</div>
         </base-button>
     </div>
 </template>
 
-<script>
-import { productPrice, renderPrice } from "@/type/catalog"
+<script lang="ts">
+import { computed, defineComponent } from "vue"
+import { useStore } from "@/store/index"
+import { productPrice, renderPrice, Product } from "@/type/catalog"
 
-export default {
-    props: ["categoryID", "club"],
-    methods: {
-        clickProduct(product) {
-            this.$emit(`select-product`, product)
-        },
-        price(p) {
-            return renderPrice(productPrice(p, this.club))
-        },
-    },
-    computed: {
-        products() {
-            const allProducts = this.$store.getters.products
-            if (!this.categoryID) {
+export default defineComponent({
+    props: ["club", "categoryID"],
+    setup(props, { emit }) {
+        const store = useStore()
+
+        const products = computed<Product[]>(() => {
+            const allProducts: Product[] = store.getters.products
+            if (!props.categoryID) {
                 return allProducts
             }
             return allProducts.filter(
-                product => product.category == this.categoryID
+                (product) => product.category == props.categoryID
             )
-        },
+        })
+
+        function clickProduct(product: Product) {
+            emit("select-product", product)
+        }
+
+        return {
+            products,
+
+            renderPrice,
+            productPrice,
+
+            clickProduct,
+        }
     },
-}
+})
 </script>
 
 <style></style>

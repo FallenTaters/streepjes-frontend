@@ -1,91 +1,90 @@
 <template>
     <div @click="setActive">
         <div :class="showWarning ? 'shown' : 'hidden'">
-            <h1>You will be logged out in {{ renderTime() }}</h1>
+            <h1>You will be logged out in {{ timeLeftString }}</h1>
             <h2>Tap Screen anywhere to continue</h2>
         </div>
         <slot></slot>
     </div>
 </template>
 
-<script>
-import { defineComponent } from "@vue/runtime-core"
-import { mapGetters } from "vuex"
-import { postActive } from "@/api/auth"
+<script lang="ts">
+import { defineComponent, ref, computed, onBeforeUnmount } from "vue"
 
-const second = 1000
-const minute = 60 * second
+import { useStore } from "@/store/index"
+import { postActive } from "@/api/auth"
+import { renderTime, minute } from "@/type/time"
+
 const maxTimeInactive = 5 * minute
 const warningTimeLeft = 3 * minute
 const timeBetweenCalls = 0.5 * minute
 
 export default defineComponent({
-    data() {
-        return {
-            currentDate: new Date(),
-            timeLeft: maxTimeInactive,
-            showWarning: false,
-            lastActiveCall: new Date(),
-            interval: null,
+    setup() {
+        const store = useStore()
+        const lastActive = computed<Date>(() => store.getters.lastActive)
+
+        // time left before lock
+        const timeLeft = ref<number>(maxTimeInactive)
+        const timeLeftString = computed<string>(() =>
+            renderTime(timeLeft.value)
+        )
+        function calcTimeLeft() {
+            const inactive = new Date().getTime() - lastActive.value.getTime()
+            timeLeft.value = maxTimeInactive - inactive
         }
-    },
-    created() {
-        this.setActive()
-        this.makeInterval()
-    },
-    computed: {
-        ...mapGetters(["lastActive"]),
-    },
-    methods: {
-        calcTimeLeft() {
-            this.timeLeft = maxTimeInactive - (new Date() - this.lastActive)
-        },
-        setActive() {
-            this.$store.dispatch("refreshActive")
-            this.calcTimeLeft()
-            this.check()
-        },
-        async check() {
-            // check time left
-            this.calcTimeLeft()
-            if (this.timeLeft < 0) {
-                this.$store.dispatch("unauthorized")
+
+        // check every second
+        const showWarning = ref<boolean>(false)
+        const lastActiveCall = ref<Date>(new Date())
+        async function check() {
+            // calculate time left and show warning
+            calcTimeLeft()
+            if (timeLeft.value < 0) {
+                store.dispatch("unauthorized")
                 return
-            } else if (this.timeLeft < warningTimeLeft) {
-                this.showWarning = true
+            } else if (timeLeft.value < warningTimeLeft) {
+                showWarning.value = true
             } else {
-                this.showWarning = false
+                showWarning.value = false
             }
 
-            // check last call
-            if (new Date() - this.lastActiveCall > timeBetweenCalls) {
+            // check last API call
+            if (
+                new Date().getTime() - lastActiveCall.value.getTime() >
+                timeBetweenCalls
+            ) {
                 const resp = await postActive()
                 if (!resp.status || resp.status != 200) {
-                    this.$store.dispatch("unauthorized")
+                    store.dispatch("unauthorized")
                     return
                 }
 
-                this.lastActiveCall = new Date()
+                lastActiveCall.value = new Date()
             }
-        },
-        makeInterval() {
-            this.interval = setInterval(() => {
-                this.check()
-            }, 1000)
-        },
-        renderTime() {
-            let minutes = Math.floor(this.timeLeft / minute)
-            let seconds = Math.floor(
-                (this.timeLeft - minutes * minute) / second
-            )
-            minutes = String(minutes).padStart(2, "0")
-            seconds = String(seconds).padStart(2, "0")
+        }
 
-            return `${minutes}:${seconds}`
-        },
-    },
-    beforeUnmount() {
-        clearInterval(this.interval)
+        // interval for checking
+        let interval = 0
+        function makeInterval() {
+            interval = setInterval(() => {
+                check()
+            }, 1000)
+        }
+        onBeforeUnmount(() => clearInterval(interval))
+
+        // refresh on any click
+        function setActive() {
+            store.dispatch("refreshActive")
+            calcTimeLeft()
+            check()
+        }
+
+        // get started
+        setActive()
+        makeInterval()
+
+        return { showWarning, timeLeftString, setActive }
     },
 })
 </script>

@@ -29,27 +29,31 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, ref } from "vue"
+import { useRouter } from "vue-router"
+
+import { useStore } from "@/store/index"
 import { postLogin } from "@/api/auth"
 import { Role } from "@/type/user"
 
-export default {
-    data() {
-        return {
-            username: "",
-            password: "",
-            errorMessage: "",
-        }
-    },
-    methods: {
-        async login() {
-            this.errorMessage = ""
+export default defineComponent({
+    setup() {
+        const store = useStore()
+        const router = useRouter()
+
+        const username = ref<string>("")
+        const password = ref<string>("")
+        const errorMessage = ref<string>("")
+
+        async function login() {
+            errorMessage.value = ""
 
             let resp
             try {
-                resp = await postLogin(this.username, this.password)
+                resp = await postLogin(username.value, password.value)
             } catch {
-                this.errorMessage = "Connection error"
+                errorMessage.value = "Connection error"
                 return
             }
 
@@ -60,31 +64,39 @@ export default {
                     break
 
                 case 401:
-                    this.errorMessage = "Invalid username and/or password"
+                    errorMessage.value = "Invalid username and/or password"
                     return
 
                 default:
-                    this.errorMessage = "Unknown error occured while loggin in"
+                    errorMessage.value = "Unknown error occured while loggin in"
                     return
             }
 
-            this.$store.dispatch(`setRole`, data)
+            store.dispatch(`setRole`, data)
             switch (data) {
                 case Role.NotAuthorized:
-                    this.errorMessage = "Unauthorized"
+                    errorMessage.value = "Unauthorized"
                     break
 
                 case Role.Admin:
-                    this.$router.push(`/admin`)
+                    router.push(`/billing`)
                     break
 
                 case Role.Bartender:
-                    this.$router.push(`/`)
+                    router.push(`/`)
                     break
             }
-        },
+        }
+
+        return {
+            username,
+            password,
+            errorMessage,
+
+            login,
+        }
     },
-}
+})
 </script>
 
 <style scoped>

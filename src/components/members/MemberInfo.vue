@@ -8,16 +8,17 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from "vue"
 import { renderPrice } from "@/type/catalog"
 
-export default {
-    props: ["member"],
-    methods: {
-        renderPrice(x: number) {
-            return renderPrice(x)
-        },
+export default defineComponent({
+    setup() {
+        return {
+            renderPrice,
+        }
     },
-}
+    props: ["member"],
+})
 </script>
 
 <style></style>
