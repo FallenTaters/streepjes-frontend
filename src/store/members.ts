@@ -8,17 +8,20 @@ export interface MemberState {
     loadState: LoadState
 }
 
-export const memberStore: Module<MemberState, object> = {
+export const memberStore: Module<MemberState, unknown> = {
     state: {
         members: [],
         loadState: LoadState.NotLoaded,
     },
     getters: {
         byClub(state, getters) {
-            return state.members.filter(mem => mem.club == getters.club)
+            return state.members.filter((mem) => mem.club == getters.club)
         },
         members(state) {
             return state.members
+        },
+        memberLoadState(state) {
+            return state.loadState
         },
     },
     mutations: {

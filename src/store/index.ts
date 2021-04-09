@@ -25,6 +25,6 @@ export const store = createStore<State>({
     plugins: [createPersistedState<State>()],
 })
 
-export function useStore() {
+export function useStore(): Store<State> {
     return baseUseStore(key)
 }

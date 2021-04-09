@@ -39,7 +39,7 @@ export function orderPayloadToOrder(
     payload: OrderPayload,
     members: Member[]
 ): Order {
-    const foundMember = members.find(m => (m.id = payload.memberId))
+    const foundMember = members.find((m) => (m.id = payload.memberId))
     const member = foundMember ? foundMember : null
 
     return {
@@ -57,12 +57,12 @@ export function orderPayloadToOrder(
 
 export function orderPrice(o: Order): number {
     let sum = 0
-    o.orderlines.forEach(ol => (sum += orderlinePrice(ol, o.club)))
+    o.orderlines.forEach((ol) => (sum += orderlinePrice(ol, o.club)))
     return sum
 }
 
-export function addProductToOrder(o: Order, p: Product) {
-    o.orderlines.forEach(ol => {
+export function addProductToOrder(o: Order, p: Product): void {
+    o.orderlines.forEach((ol) => {
         if (ol.product.id == p.id) {
             ol.amount++
             return
