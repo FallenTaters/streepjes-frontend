@@ -8,7 +8,7 @@ import {
 } from "@/type/order"
 import { doFetch } from "./type"
 
-export async function postOrder(order: Order) {
+export async function postOrder(order: Order): Promise<Response> {
     return await fetch(apiEndpoint + `/order`, {
         method: "POST",
         body: JSON.stringify({
@@ -23,16 +23,16 @@ export async function postOrder(order: Order) {
 }
 
 export async function getOrders(members: Member[]): Promise<Order[]> {
-    return doFetch<OrderPayload[]>(apiEndpoint + "/orders").then(payload => {
+    return doFetch<OrderPayload[]>(apiEndpoint + "/orders").then((payload) => {
         const orders: Order[] = []
-        payload.forEach(p => {
+        payload.forEach((p) => {
             orders.push(orderPayloadToOrder(p, members))
         })
         return orders
     })
 }
 
-export async function deleteOrder(id: number) {
+export async function deleteOrder(id: number): Promise<Response> {
     return await fetch(apiEndpoint + `/order/delete/` + id, {
         method: "POST",
         credentials: "include",

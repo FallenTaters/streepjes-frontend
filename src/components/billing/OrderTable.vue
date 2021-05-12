@@ -82,7 +82,7 @@ th {
     background-color: white;
 }
 .cancelled {
-    background-color: rgb(112, 112, 112);
+    background-color: rgb(180, 180, 180);
 }
 .paid {
     background-color: rgb(200, 233, 200);

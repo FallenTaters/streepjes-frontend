@@ -31,7 +31,7 @@ export default defineComponent({
         const role = computed<string>(() => store.getters.role)
 
         // route to login on unauthorized
-        watch<string>(role, v => {
+        watch<string>(role, (v) => {
             if (v == Role.NotAuthorized) {
                 router.push(`/login`)
             }
@@ -138,5 +138,15 @@ body {
 }
 .w-300 {
     width: 300px;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.ellipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 </style>

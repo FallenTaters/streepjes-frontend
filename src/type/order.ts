@@ -39,7 +39,7 @@ export function orderPayloadToOrder(
     payload: OrderPayload,
     members: Member[]
 ): Order {
-    const foundMember = members.find((m) => (m.id = payload.memberId))
+    const foundMember = members.find((m) => m.id == payload.memberId)
     const member = foundMember ? foundMember : null
 
     return {

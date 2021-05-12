@@ -12,14 +12,16 @@ export function renderTime(time: number): string {
 }
 
 export function renderDate(p: Date): string {
+    const hours = p.getHours().toString().padStart(2, "0")
+    const minutes = p.getMinutes().toString().padStart(2, "0")
+    const timeString = `${hours}:${minutes}`
+
+    let dateString
     if (p.getDay() == new Date().getDay()) {
-        return `${p
-            .getHours()
-            .toString()
-            .padStart(2, "0")}:${p
-            .getMinutes()
-            .toString()
-            .padStart(2, "0")}`
+        dateString = "Today"
+    } else {
+        dateString = p.toLocaleDateString()
     }
-    return p.toDateString()
+
+    return `${dateString} ${timeString}`
 }

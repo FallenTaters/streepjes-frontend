@@ -12,15 +12,15 @@
                 :padding="9"
             >
                 <div class="flex-apart">
-                    <div class="w-100">
-                        <span v-if="order.member">
+                    <div class="w-300 align-right ellipsis">
+                        <template v-if="order.member">
                             {{ order.member.name }}
-                        </span>
+                        </template>
                     </div>
-                    <div>
+                    <div class="w-200 align-right">
                         {{ renderDate(order.orderDate) }}
                     </div>
-                    <div class="w-200">
+                    <div class="w-100 align-right">
                         {{ renderPrice(order.price) }}
                     </div>
                 </div>
