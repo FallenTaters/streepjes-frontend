@@ -1,6 +1,6 @@
 <template>
     <div id="header">
-        <div @click="order" v-if="isBartender">Order</div>
+        <div @click="order">Order</div>
         <div @click="history" v-if="isBartender">History</div>
         <div @click="users" v-if="isAdmin">Users</div>
         <div @click="members" v-if="isAdmin">Catalog</div>

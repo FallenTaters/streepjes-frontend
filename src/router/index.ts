@@ -9,17 +9,15 @@ import { store } from "@/store/index"
 
 const authGuard: NavigationGuard = function (to, from, next) {
     const role = store.getters.role
-    if (!role || role == Role.NotAuthorized) {
-        next({ name: "login" })
-    }
+    if (!role || role == Role.NotAuthorized) next({ name: "login" })
+    else next()
 }
 
 function roleGuard(role: string): NavigationGuard {
     return function (to, from, next) {
         const actual = store.getters.role
-        if (!actual || actual != role) {
-            next({ name: "login" })
-        }
+        if (!actual || actual != role) next({ name: "login" })
+        else next()
     }
 }
 
