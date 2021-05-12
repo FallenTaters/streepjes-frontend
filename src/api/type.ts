@@ -14,11 +14,11 @@ export interface FetchResult<Type> {
 export async function doFetch<Type>(
     url: string,
     method = "GET",
-    payload?: object | undefined
+    payload?: Record<string, unknown> | undefined
 ): Promise<Type> {
     return fetch(url, {
         method: method,
         body: payload ? JSON.stringify(payload) : undefined,
         credentials: "include",
-    }).then(resp => resp.json())
+    }).then((resp) => resp.json())
 }

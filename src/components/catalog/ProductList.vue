@@ -1,10 +1,15 @@
 <template>
     <div class="auto-scroll">
+        <base-button v-if="add" :bordered="true" :club="club" @click="emitAdd">
+            +
+        </base-button>
         <base-button
             v-for="product in products"
             :key="product.id"
+            :club="club"
             class="flex-apart"
             @click="clickProduct(product)"
+            :selected="selectedProductId == product.id"
         >
             <div>{{ product.name }}</div>
             <div>{{ renderPrice(productPrice(product, club)) }}</div>
@@ -18,7 +23,7 @@ import { useStore } from "@/store/index"
 import { productPrice, renderPrice, Product } from "@/type/catalog"
 
 export default defineComponent({
-    props: ["club", "categoryID"],
+    props: ["club", "categoryID", "add", "selectedProductId"],
     setup(props, { emit }) {
         const store = useStore()
 
@@ -36,6 +41,10 @@ export default defineComponent({
             emit("select-product", product)
         }
 
+        function emitAdd() {
+            emit("add")
+        }
+
         return {
             products,
 
@@ -43,6 +52,7 @@ export default defineComponent({
             productPrice,
 
             clickProduct,
+            emitAdd,
         }
     },
 })

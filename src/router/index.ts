@@ -49,6 +49,12 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("../views/Billing.vue"),
         beforeEnter: roleGuard(Role.Admin),
     },
+    {
+        path: "/catalog",
+        name: "catalog",
+        component: () => import("../views/Catalog.vue"),
+        beforeEnter: roleGuard(Role.Admin),
+    },
 ]
 
 const router = createRouter({

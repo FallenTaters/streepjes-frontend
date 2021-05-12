@@ -2,6 +2,7 @@ import { Module } from "vuex"
 import { Category, Product } from "@/type/catalog"
 import { getCatalog } from "@/api/catalog"
 import { LoadState } from "@/api/type"
+import { State } from "."
 
 export interface CatalogState {
     loadState: LoadState
@@ -9,7 +10,7 @@ export interface CatalogState {
     products: Product[]
 }
 
-export const catalogStore: Module<CatalogState, object> = {
+export const catalogStore: Module<CatalogState, State> = {
     state: {
         loadState: LoadState.NotLoaded,
         categories: [],
@@ -42,7 +43,7 @@ export const catalogStore: Module<CatalogState, object> = {
             commit("setCatalogLoadState", LoadState.Loading)
 
             getCatalog()
-                .then(catalog => {
+                .then((catalog) => {
                     commit("setCategories", catalog.categories)
                     commit("setProducts", catalog.products)
                     commit("setCatalogLoadState", LoadState.Success)

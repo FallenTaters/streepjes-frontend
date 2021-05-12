@@ -2,6 +2,7 @@ import { Club, Member } from "@/type/member"
 import { Order, orderPrice, Orderline } from "@/type/order"
 import { Product } from "@/type/catalog"
 import { Module } from "vuex"
+import { State } from "."
 
 function emptyOrder(): Order {
     return {
@@ -21,7 +22,7 @@ export interface OrderState {
     order: Order
 }
 
-export const orderStore: Module<OrderState, object> = {
+export const orderStore: Module<OrderState, State> = {
     state: { order: emptyOrder() },
     getters: {
         club(state): Club {
@@ -49,7 +50,7 @@ export const orderStore: Module<OrderState, object> = {
         },
         removeOrderline(state, orderline: Orderline) {
             state.order.orderlines = state.order.orderlines.filter(
-                ol => ol != orderline
+                (ol) => ol != orderline
             )
         },
         setClub(state, club: Club) {
