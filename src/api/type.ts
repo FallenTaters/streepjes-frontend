@@ -14,7 +14,7 @@ export interface FetchResult<Type> {
 export async function doFetch<Type>(
     url: string,
     method = "GET",
-    payload?: Record<string, unknown> | undefined
+    payload?: unknown
 ): Promise<Type> {
     return fetch(url, {
         method: method,

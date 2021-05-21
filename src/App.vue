@@ -4,7 +4,7 @@
             <component :is="Component" />
         </router-view>
     </active-watcher>
-    <div v-else>
+    <div>
         <router-view v-slot="{ Component }">
             <component :is="Component" />
         </router-view>
@@ -148,5 +148,9 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.error {
+    color: red;
 }
 </style>

@@ -14,12 +14,19 @@
         <category-list :club="club" v-model="selectedCategoryID" :add="true" />
         <product-list
             @select-product="selectProduct"
+            @add="addProduct"
             :club="club"
             :categoryID="selectedCategoryID"
             :add="true"
             :selectedProductId="selectedProductID"
         />
-        <product-details :id="selectedProductID" />
+        <product-form
+            v-if="selectedProductID || newProduct"
+            :id="selectedProductID"
+            :newProduct="newProduct"
+            @discard="discardProduct"
+            @saved="savedProduct"
+        />
     </div>
 </template>
 
@@ -28,12 +35,12 @@ import { defineComponent, ref, computed, watch } from "vue"
 
 import CategoryList from "@/components/catalog/CategoryList.vue"
 import ProductList from "@/components/catalog/ProductList.vue"
+import ProductForm from "@/components/catalog/ProductForm.vue"
 import TheHeader from "@/components/TheHeader.vue"
 
 import { Club } from "@/type/member"
 import { LoadState } from "@/api/type"
 import { renderPrice, Product } from "@/type/catalog"
-import { orderlinePrice, Orderline } from "@/type/order"
 import { useStore } from "@/store/index"
 
 export default defineComponent({
@@ -61,6 +68,19 @@ export default defineComponent({
 
         function selectProduct(product: Product) {
             selectedProductID.value = product.id
+            newProduct.value = false
+        }
+
+        const newProduct = ref<boolean>(false)
+        function addProduct() {
+            newProduct.value = true
+            selectedProductID.value = 0
+        }
+        function discardProduct() {
+            newProduct.value = false
+        }
+        function savedProduct() {
+            window.location.reload()
         }
 
         return {
@@ -72,15 +92,20 @@ export default defineComponent({
             selectedProductID,
 
             renderPrice,
-            orderlinePrice,
 
+            addProduct,
             selectProduct,
+            discardProduct,
+            savedProduct,
+
+            newProduct,
         }
     },
     components: {
         CategoryList,
         ProductList,
         TheHeader,
+        ProductForm,
     },
 })
 </script>
@@ -94,12 +119,5 @@ export default defineComponent({
     display: grid;
     grid-template-columns: 20% 35% 45%;
     grid-template-rows: 10% 65% 25%;
-}
-
-.paymentTotal {
-    margin: 0 20px;
-}
-.paymentTotal > h2 {
-    margin: 0px;
 }
 </style>
