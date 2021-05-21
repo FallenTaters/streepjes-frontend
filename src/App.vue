@@ -4,7 +4,7 @@
             <component :is="Component" />
         </router-view>
     </active-watcher>
-    <div>
+    <div v-else>
         <router-view v-slot="{ Component }">
             <component :is="Component" />
         </router-view>
