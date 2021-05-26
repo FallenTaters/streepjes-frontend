@@ -60,12 +60,11 @@
             <div class="form-row">
                 <div class="form-col">
                     <base-button
-                        v-if="newProduct"
                         :club="userClub"
                         :margin="0"
                         @click="discardProduct"
                     >
-                        Discard
+                        {{ deleteText }}
                     </base-button>
                 </div>
                 <div class="form-col">
@@ -93,7 +92,7 @@ import { Category, Product } from "@/type/catalog"
 import { useStore } from "@/store/index"
 import BaseButton from "../ui/BaseButton.vue"
 import { Club } from "@/type/member"
-import { postProduct } from "@/api/catalog"
+import { deleteProduct, postProduct } from "@/api/catalog"
 
 export default defineComponent({
     props: ["id", "newProduct"],
@@ -145,10 +144,25 @@ export default defineComponent({
         const saveText = computed(() =>
             props.newProduct ? "Add to catalog" : "Save changes"
         )
+        const deleteText = computed(() =>
+            props.newProduct ? "Discard" : "Delete"
+        )
 
-        function discardProduct() {
-            emit("discard")
+        async function discardProduct() {
             errorText.value = ""
+            if (props.newProduct) {
+                emit("deleted")
+                return
+            }
+
+            try {
+                await deleteProduct(props.id)
+            } catch (e) {
+                errorText.value = "Unable to delete product"
+                return
+            }
+
+            emit("deleted")
         }
 
         async function saveProduct() {
@@ -184,6 +198,7 @@ export default defineComponent({
             userClub,
 
             saveText,
+            deleteText,
             errorText,
 
             discardProduct,

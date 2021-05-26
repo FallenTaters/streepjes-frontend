@@ -13,3 +13,10 @@ export function postProduct(product: Product): Promise<Response> {
         credentials: "include",
     })
 }
+
+export function deleteProduct(id: number): Promise<Response> {
+    return fetch(apiEndpoint + "/product/delete/" + id, {
+        method: "POST",
+        credentials: "include",
+    })
+}

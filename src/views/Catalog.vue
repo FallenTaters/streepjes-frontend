@@ -24,7 +24,7 @@
             v-if="selectedProductID || newProduct"
             :id="selectedProductID"
             :newProduct="newProduct"
-            @discard="discardProduct"
+            @deleted="deleteProduct"
             @saved="savedProduct"
         />
     </div>
@@ -76,8 +76,11 @@ export default defineComponent({
             newProduct.value = true
             selectedProductID.value = 0
         }
-        function discardProduct() {
+        function deleteProduct() {
             newProduct.value = false
+            if (selectedProductID.value !== 0) {
+                window.location.reload()
+            }
         }
         function savedProduct() {
             window.location.reload()
@@ -95,7 +98,7 @@ export default defineComponent({
 
             addProduct,
             selectProduct,
-            discardProduct,
+            deleteProduct,
             savedProduct,
 
             newProduct,
