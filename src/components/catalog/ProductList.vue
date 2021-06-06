@@ -23,7 +23,7 @@ import { useStore } from "@/store/index"
 import { productPrice, renderPrice, Product } from "@/type/catalog"
 
 export default defineComponent({
-    props: ["club", "categoryID", "add", "selectedProductId"],
+    props: ["club", "categoryID", "add", "selectedProductId", "showAll"],
     setup(props, { emit }) {
         const store = useStore()
 
@@ -33,7 +33,9 @@ export default defineComponent({
                 return allProducts
             }
             return allProducts.filter(
-                (product) => product.category == props.categoryID
+                (product) =>
+                    product.category == props.categoryID &&
+                    (props.showAll || productPrice(product, props.club) > 0)
             )
         })
 

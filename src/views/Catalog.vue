@@ -19,6 +19,7 @@
             :categoryID="selectedCategoryID"
             :add="true"
             :selectedProductId="selectedProductID"
+            :showAll="true"
         />
         <product-form
             v-if="selectedProductID || newProduct"
