@@ -68,7 +68,8 @@ export default defineComponent({
                     return
 
                 default:
-                    errorMessage.value = "Unknown error occured while loggin in"
+                    errorMessage.value =
+                        "Unknown error occured while logging in"
                     return
             }
 
@@ -84,6 +85,11 @@ export default defineComponent({
 
                 case Role.Bartender:
                     router.push(`/`)
+                    break
+
+                default:
+                    errorMessage.value =
+                        "User permissions unclear. Contact the System Administrator."
                     break
             }
         }
