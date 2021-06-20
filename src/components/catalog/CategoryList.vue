@@ -9,6 +9,7 @@
             :key="category.id"
             :club="buttonClub"
             @click="selectCategory(category.id)"
+            @dblclick="doubleClickCategory(category.id)"
         >
             {{ category.name }}
         </base-button>
@@ -35,6 +36,10 @@ export default defineComponent({
             emit("update:modelValue", id)
         }
 
+        function doubleClickCategory(id: number) {
+            emit("doubleClickCategory", id)
+        }
+
         function emitAdd() {
             emit("add")
         }
@@ -44,6 +49,7 @@ export default defineComponent({
             selectCategory,
             buttonClub,
             emitAdd,
+            doubleClickCategory,
         }
     },
 })

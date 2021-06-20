@@ -27,12 +27,14 @@
             </base-button>
         </div>
     </div>
-    <modal v-if="selectedOrder">
+    <modal
+        v-if="selectedOrder"
+        closeText="← Back"
+        @close="selectedOrder = null"
+        :closeAbsolute="true"
+    >
         <div>
-            <div class="flex-apart">
-                <button @click="selectedOrder = null" class="badge-link">
-                    ← Back
-                </button>
+            <div style="text-align: right">
                 <button
                     v-if="selectedOrder.status != OrderStatus.Cancelled"
                     @click="doDeleteOrder"

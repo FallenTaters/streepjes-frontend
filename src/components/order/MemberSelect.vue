@@ -4,19 +4,20 @@
             <member-info v-if="memberSelected" :member="selectedMember" />
             <div v-else>No member selected</div>
         </base-button>
-        <modal v-if="showModal">
+        <modal
+            v-if="showModal"
+            closeText="← Back"
+            @close="showModal = false"
+            :closeAbsolute="true"
+        >
             <div>
-                <div class="flex-apart">
-                    <button @click="showModal = false" class="badge-link">
-                        ← Back
-                    </button>
+                <div style="text-align: right">
                     <input
                         class="input-bigger"
                         type="text"
                         v-model="searchString"
                         placeholder="Search"
                     />
-                    <div></div>
                 </div>
                 <div id="member-grid">
                     <base-button
@@ -95,7 +96,7 @@ export default defineComponent({
 <style scoped>
 #member-grid {
     display: grid;
-    height: 80vh;
+    height: auto;
     justify-content: stretch;
     margin-left: auto;
     margin-right: auto;

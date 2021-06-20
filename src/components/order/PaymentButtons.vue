@@ -16,15 +16,15 @@
         >
             <h2>Anonymous</h2>
         </base-button>
-        <modal v-if="showModal">
-            <div class="flex-apart">
-                <button @click="showModal = false" class="badge-link">
-                    ← Back
-                </button>
-                <div style="font-size: 1.3em">
-                    {{ showBill ? "Add To Bill" : "Direct Payment" }}
-                </div>
-                <div></div>
+
+        <modal
+            v-if="showModal"
+            closeText="← Back"
+            @close="showModal = false"
+            :closeAbsolute="true"
+        >
+            <div style="font-size: 1.3em">
+                {{ showBill ? "Add To Bill" : "Direct Payment" }}
             </div>
             <div style="padding: 30px; text-align: left; height: 200px">
                 <div v-if="showBill">

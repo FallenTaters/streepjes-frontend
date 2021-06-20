@@ -11,7 +11,13 @@
         <h2>Category</h2>
         <h2>Product</h2>
         <h2></h2>
-        <category-list :club="club" v-model="selectedCategoryID" :add="true" />
+        <category-list
+            :club="club"
+            v-model="selectedCategoryID"
+            :add="true"
+            @add="addCategory"
+            @doubleClickCategory="editCategory"
+        />
         <product-list
             @select-product="selectProduct"
             @add="addProduct"
@@ -25,9 +31,21 @@
             v-if="selectedProductID || newProduct"
             :id="selectedProductID"
             :newProduct="newProduct"
-            @deleted="deleteProduct"
+            @deleted="deletedProduct"
             @saved="savedProduct"
         />
+        <modal
+            v-if="editCategoryID || newCategory"
+            closeText="← Back"
+            @close="closeCategoryModal"
+        >
+            <category-form
+                :id="editCategoryID"
+                :newCategory="newCategory"
+                @deleted="deletedCategory"
+                @saved="savedCategory"
+            />
+        </modal>
     </div>
 </template>
 
@@ -38,6 +56,8 @@ import CategoryList from "@/components/catalog/CategoryList.vue"
 import ProductList from "@/components/catalog/ProductList.vue"
 import ProductForm from "@/components/catalog/ProductForm.vue"
 import TheHeader from "@/components/TheHeader.vue"
+import Modal from "@/components/ui/Modal.vue"
+import CategoryForm from "@/components/catalog/CategoryForm.vue"
 
 import { Club } from "@/type/member"
 import { LoadState } from "@/api/type"
@@ -72,12 +92,13 @@ export default defineComponent({
             newProduct.value = false
         }
 
+        // product management
         const newProduct = ref<boolean>(false)
         function addProduct() {
             newProduct.value = true
             selectedProductID.value = 0
         }
-        function deleteProduct() {
+        function deletedProduct() {
             newProduct.value = false
             if (selectedProductID.value !== 0) {
                 window.location.reload()
@@ -87,6 +108,28 @@ export default defineComponent({
             window.location.reload()
         }
 
+        // category management
+        const newCategory = ref<boolean>(false)
+        const editCategoryID = ref<number>(0)
+        function addCategory() {
+            newCategory.value = true
+        }
+        function editCategory(id: number) {
+            newCategory.value = false
+            editCategoryID.value = id
+        }
+        function deletedCategory() {
+            if (!newCategory.value) window.location.reload()
+            else newCategory.value = false
+        }
+        function savedCategory() {
+            window.location.reload()
+        }
+        function closeCategoryModal() {
+            newCategory.value = false
+            editCategoryID.value = 0
+        }
+
         return {
             LoadState,
 
@@ -94,15 +137,22 @@ export default defineComponent({
             club,
             selectedCategoryID,
             selectedProductID,
+            editCategoryID,
 
             renderPrice,
 
             addProduct,
             selectProduct,
-            deleteProduct,
+            deletedProduct,
             savedProduct,
+            deletedCategory,
+            savedCategory,
+            addCategory,
+            editCategory,
+            closeCategoryModal,
 
             newProduct,
+            newCategory,
         }
     },
     components: {
@@ -110,6 +160,8 @@ export default defineComponent({
         ProductList,
         TheHeader,
         ProductForm,
+        Modal,
+        CategoryForm,
     },
 })
 </script>

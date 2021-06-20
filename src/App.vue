@@ -153,4 +153,27 @@ body {
 .error {
     color: red;
 }
+
+/* Form */
+.form-row {
+    display: flex;
+    align-items: center;
+}
+.form-row-center {
+    margin: 10px;
+    margin-bottom: 30px;
+}
+.form-col {
+    text-align: left;
+    width: 50%;
+    padding: 3px;
+}
+.form-input {
+    width: stretch;
+    padding: 12px;
+    border-radius: 15px;
+    border: 3px solid black;
+    background-color: lightgray;
+    font-size: 1.5rem;
+}
 </style>

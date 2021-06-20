@@ -3,7 +3,7 @@
     <div class="container">
         <h2>Log In</h2>
         <form @submit.prevent="login">
-            <div class="form-row">
+            <div class="form-row-center">
                 <input
                     type="text"
                     placeholder="Username"
@@ -11,7 +11,7 @@
                     class="input-bigger wide"
                 />
             </div>
-            <div class="form-row">
+            <div class="form-row-center">
                 <input
                     type="password"
                     placeholder="Password"
@@ -19,7 +19,7 @@
                     class="input-bigger wide"
                 />
             </div>
-            <div class="form-row">
+            <div class="form-row-center">
                 <input type="submit" value="Log In" class="badge-link" />
             </div>
             <div v-if="errorMessage" class="errorMessage">
@@ -117,10 +117,5 @@ export default defineComponent({
 
 .wide {
     width: 400px;
-}
-
-.form-row {
-    margin: 10px;
-    margin-bottom: 30px;
 }
 </style>

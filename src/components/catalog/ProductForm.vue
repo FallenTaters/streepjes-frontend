@@ -156,9 +156,15 @@ export default defineComponent({
             }
 
             try {
-                await deleteProduct(props.id)
+                const resp = await deleteProduct(props.id)
+                if (resp.status === 200) {
+                    emit("deleted")
+                    return
+                }
+
+                errorText.value = await resp.text()
             } catch (e) {
-                errorText.value = "Unable to delete product"
+                errorText.value = "connection error"
                 return
             }
 
@@ -208,23 +214,3 @@ export default defineComponent({
     components: { BaseButton },
 })
 </script>
-
-<style scoped>
-.form-row {
-    display: flex;
-    align-items: center;
-}
-.form-col {
-    text-align: left;
-    width: 50%;
-    padding: 3px;
-}
-.form-input {
-    width: stretch;
-    padding: 12px;
-    border-radius: 15px;
-    border: 3px solid black;
-    background-color: lightgray;
-    font-size: 1.5rem;
-}
-</style>

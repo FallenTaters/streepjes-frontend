@@ -3,6 +3,15 @@
         <div class="modal-mask">
             <div class="modal-wrapper">
                 <div class="modal-container">
+                    <div
+                        v-if="closeText"
+                        class="close-container"
+                        :class="closeClass"
+                    >
+                        <button @click="emitClose" class="badge-link">
+                            {{ closeText }}
+                        </button>
+                    </div>
                     <slot></slot>
                 </div>
             </div>
@@ -11,9 +20,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import { defineComponent, computed } from "vue"
 
-export default defineComponent({})
+export default defineComponent({
+    props: ["closeText", "closeAbsolute"],
+    setup(props, { emit }) {
+        function emitClose() {
+            emit("close")
+        }
+
+        const closeClass = computed<string>(() => {
+            if (props.closeAbsolute) {
+                return "absolute"
+            }
+            return ""
+        })
+
+        return {
+            emitClose,
+            closeClass,
+        }
+    },
+})
 </script>
 
 <style scoped>
@@ -80,5 +108,15 @@ export default defineComponent({})
 .modal-leave-active .modal-container {
     -webkit-transform: scale(1.1);
     transform: scale(1.1);
+}
+
+.close-container {
+    width: 100%;
+    text-align: left;
+    padding-bottom: 10px;
+}
+
+.absolute {
+    position: absolute;
 }
 </style>
