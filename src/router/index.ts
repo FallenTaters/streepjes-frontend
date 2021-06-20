@@ -55,6 +55,12 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("../views/Catalog.vue"),
         beforeEnter: roleGuard(Role.Admin),
     },
+    {
+        path: "/members",
+        name: "members",
+        component: () => import("../views/Members.vue"),
+        beforeEnter: roleGuard(Role.Admin),
+    },
 ]
 
 const router = createRouter({
