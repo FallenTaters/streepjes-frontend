@@ -111,7 +111,6 @@ export default defineComponent({
 }
 
 .close-container {
-    width: 100%;
     text-align: left;
     padding-bottom: 10px;
 }
