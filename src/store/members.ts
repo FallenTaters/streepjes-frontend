@@ -1,4 +1,4 @@
-import { Member } from "@/type/member"
+import { Club, Member } from "@/type/member"
 import { Module } from "vuex"
 import { getMembers } from "@/api/members"
 import { LoadState } from "@/api/type"
@@ -14,10 +14,17 @@ export const memberStore: Module<MemberState, unknown> = {
         loadState: LoadState.NotLoaded,
     },
     getters: {
-        byClub(state, getters) {
-            return state.members.filter((mem) => mem.club == getters.club)
+        membersByUserClub(state, getters): Member[] {
+            return getters.membersByClub(getters.userClub)
         },
-        members(state) {
+        membersByOrderClub(state, getters): Member[] {
+            return getters.membersByClub(getters.club)
+        },
+        membersByClub(state): (club: Club) => Member[] {
+            return (club: Club) =>
+                state.members.filter((mem) => mem.club === club)
+        },
+        members(state): Member[] {
             return state.members
         },
         memberLoadState(state) {

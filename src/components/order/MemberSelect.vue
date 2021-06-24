@@ -19,16 +19,7 @@
                         placeholder="Search"
                     />
                 </div>
-                <div id="member-grid">
-                    <base-button
-                        style="font-size: 0.7em"
-                        v-for="member in members"
-                        :key="member.id"
-                        @click="selectMember(member)"
-                    >
-                        {{ member.name }}
-                    </base-button>
-                </div>
+                <member-grid :members="members" @select="selectMember" />
             </div>
         </modal>
     </div>
@@ -39,6 +30,7 @@ import { defineComponent, ref, computed } from "vue"
 import { useStore } from "@/store/index"
 import { Member } from "@/type/member"
 import MemberInfo from "@/components/members/MemberInfo.vue"
+import MemberGrid from "@/components/members/MemberGrid.vue"
 
 export default defineComponent({
     setup() {
@@ -89,19 +81,6 @@ export default defineComponent({
             selectMember,
         }
     },
-    components: { MemberInfo },
+    components: { MemberInfo, MemberGrid },
 })
 </script>
-
-<style scoped>
-#member-grid {
-    display: grid;
-    height: auto;
-    justify-content: stretch;
-    margin-left: auto;
-    margin-right: auto;
-    display: grid;
-    grid-template-columns: 33% 33% 33%;
-    grid-auto-rows: 75px;
-}
-</style>
