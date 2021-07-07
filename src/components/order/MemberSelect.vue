@@ -28,7 +28,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue"
 import { useStore } from "@/store/index"
-import { Member } from "@/type/member"
+import { Club, Member } from "@/type/member"
 import MemberInfo from "@/components/members/MemberInfo.vue"
 import MemberGrid from "@/components/members/MemberGrid.vue"
 
@@ -41,10 +41,11 @@ export default defineComponent({
 
         const selectedMember = computed(() => store.getters.selectedMember)
         const memberSelected = computed(() => store.getters.memberSelected)
-        const club = computed(() => store.getters.club)
+        const club = computed<Club>(() => store.getters.club)
 
-        const members = computed(() => {
-            let members: Member[] = store.getters.byClub
+        const members = computed<Member[]>(() => {
+            console.log("compute")
+            let members: Member[] = store.getters.membersByClub(club.value)
 
             if (searchString.value) {
                 const search = searchString.value.toLowerCase()
