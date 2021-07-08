@@ -2,7 +2,7 @@
     <transition name="modal">
         <div class="modal-mask">
             <div class="modal-wrapper">
-                <div class="modal-container">
+                <div class="modal-container" :style="style">
                     <div
                         v-if="closeText"
                         class="close-container"
@@ -23,7 +23,7 @@
 import { defineComponent, computed } from "vue"
 
 export default defineComponent({
-    props: ["closeText", "closeAbsolute"],
+    props: ["closeText", "closeAbsolute", "height"],
     setup(props, { emit }) {
         function emitClose() {
             emit("close")
@@ -36,9 +36,18 @@ export default defineComponent({
             return ""
         })
 
+        const style = computed<string>(() => {
+            if (props.height) {
+                return `height: ${props.height}px;`
+            }
+
+            return ""
+        })
+
         return {
             emitClose,
             closeClass,
+            style,
         }
     },
 })

@@ -44,7 +44,6 @@ export default defineComponent({
         const club = computed<Club>(() => store.getters.club)
 
         const members = computed<Member[]>(() => {
-            console.log("compute")
             let members: Member[] = store.getters.membersByClub(club.value)
 
             if (searchString.value) {

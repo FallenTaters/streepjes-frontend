@@ -43,6 +43,8 @@ export default defineComponent({
 
         const searchString = ref<string>("")
 
+        const userClub = computed(() => store.getters.userClub)
+
         // member search and selection
         const members = computed(() => {
             let members: Member[] = store.getters.membersByUserClub
@@ -91,7 +93,7 @@ export default defineComponent({
             newMember,
             selectedMemberID,
 
-            userClub: store.getters.userClub,
+            userClub: userClub,
         }
     },
     components: {
