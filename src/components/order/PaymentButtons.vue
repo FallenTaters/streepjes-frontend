@@ -118,7 +118,8 @@ export default defineComponent({
             }
 
             postOrder(o)
-                .then(() => {
+                .then((resp) => {
+                    if (resp.status !== 200) throw ""
                     if (selectedMember.value) {
                         selectedMember.value.debt += totalPrice.value
                     }
