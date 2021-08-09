@@ -139,6 +139,9 @@ body {
 .w-300 {
     width: 300px;
 }
+.w-400 {
+    width: 400px;
+}
 
 .align-right {
     text-align: right;
