@@ -10,20 +10,14 @@
     <div v-if="loadState == LoadState.Success">
         <div class="w-400" id="dateform">
             <form @submit.prevent="load">
-                <div class="form-row">
-                    <div class="form-col">
-                        <input
-                            id="month"
-                            name="month"
-                            type="month"
-                            v-model="month"
-                        />
-                    </div>
-                    <div class="form-col">
-                        <base-button :club="userClub" margin="0" @click="load">
-                            Load
-                        </base-button>
-                    </div>
+                <div class="form-row-center">
+                    <input
+                        id="month"
+                        name="month"
+                        type="month"
+                        v-model="month"
+                        @change="load"
+                    />
                 </div>
                 <div class="form-row-center">
                     <base-button @click="getCSV" :club="userClub">
