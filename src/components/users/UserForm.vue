@@ -23,6 +23,7 @@
                     <input
                         id="password"
                         v-model="password"
+                        type="password"
                         class="form-input"
                     />
                 </div>

@@ -73,7 +73,7 @@ export default defineComponent({
 
 .modal-container {
     width: 700px;
-    height: 400px;
+    height: 450px;
     margin: 0px auto;
     padding: 20px 30px;
     background-color: #fff;
