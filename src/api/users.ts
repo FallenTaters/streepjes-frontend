@@ -8,6 +8,8 @@ export async function getUsers(): Promise<Response> {
 }
 
 export async function postUser(user: User): Promise<Response> {
+    if (user.password) user.password = btoa(user.password) // base64
+
     return await fetch(apiEndpoint + `/user`, {
         method: "POST",
         credentials: "include",

@@ -32,6 +32,22 @@ export async function getOrders(members: Member[]): Promise<Order[]> {
     })
 }
 
+export async function getOrdersByMonth(
+    year: string,
+    month: string,
+    members: Member[]
+): Promise<Order[]> {
+    return doFetch<OrderPayload[]>(
+        apiEndpoint + "/orders/" + year + "/" + month
+    ).then((payload) => {
+        const orders: Order[] = []
+        payload.forEach((p) => {
+            orders.push(orderPayloadToOrder(p, members))
+        })
+        return orders
+    })
+}
+
 export async function deleteOrder(id: number): Promise<Response> {
     return await fetch(apiEndpoint + `/order/delete/` + id, {
         method: "POST",
