@@ -106,6 +106,8 @@ export default defineComponent({
                     emit("deleted")
                     return
                 }
+
+                errorText.value = await resp.text()
             } catch (e) {
                 errorText.value = "connection error"
             }
