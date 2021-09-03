@@ -99,18 +99,18 @@ export default defineComponent({
 
         // fetch orders
         const selectedOrder = ref<null | Order>(null)
-        const orders = ref<Order[]>([])
+        let orders: Order[] = []
         const loadState = ref<LoadState>(LoadState.Loading)
-        const shownOrders = computed<Order[]>(() => orders.value.slice(0, 10))
+        const shownOrders = computed<Order[]>(() => orders.slice(0, 10))
 
         async function processOrders() {
             loadState.value = LoadState.Failed
-            orders.value = await getOrders(store.getters.members).catch(() => {
+            orders = await getOrders(store.getters.members).catch(() => {
                 store.dispatch("unauthorized")
                 loadState.value = LoadState.Failed
                 return []
             })
-            orders.value.sort((o) => (o.orderDate ? -o.orderDate.getTime() : 0))
+            orders.sort((o) => (o.orderDate ? -o.orderDate.getTime() : 0))
             loadState.value = LoadState.Success
         }
         processOrders()
