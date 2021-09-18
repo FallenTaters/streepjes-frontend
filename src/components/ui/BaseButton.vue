@@ -1,6 +1,6 @@
 <template>
-    <div
-        class="card"
+    <button
+        class="card flex-apart"
         :class="{
             selected: selected,
             gladiators: gladiators,
@@ -9,9 +9,10 @@
             disabled: disabled,
         }"
         :style="style"
+        :type="buttonType"
     >
         <slot></slot>
-    </div>
+    </button>
 </template>
 
 <script lang="ts">
@@ -35,13 +36,23 @@ export default defineComponent({
         })
 
         const style = computed(() => {
-            return `margin:${props.margin}px;padding:${props.padding}px;`
+            return (
+                `margin:${props.margin}px;` +
+                `padding:${props.padding}px;` +
+                `width:calc(100% - ${2 * props.margin}px);`
+            )
+        })
+
+        const buttonType = computed<string>(() => {
+            if (props.submit) return `submit`
+            return `button`
         })
 
         return {
             gladiators,
             parabool,
             style,
+            buttonType,
         }
     },
     props: {
@@ -69,14 +80,27 @@ export default defineComponent({
             type: Number,
             default: 15,
         },
+        submit: {
+            type: Boolean,
+            default: false,
+        },
     },
 })
 </script>
 
 <style scoped>
+button {
+    /* display: block; */
+    border: none;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .card {
     border-radius: 15px;
     overflow: hidden;
+    transition: background 250ms ease-in-out, transform 150ms ease;
 }
 .card:hover {
     cursor: pointer;
