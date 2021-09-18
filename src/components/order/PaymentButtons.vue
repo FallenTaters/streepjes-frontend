@@ -3,7 +3,6 @@
         <base-button
             @click="addToBill"
             class="paymentButton"
-            style="line-height: 3rem"
             :disabled="!selectedMember"
         >
             <h2>Member</h2>
@@ -11,7 +10,6 @@
         <base-button
             @click="directPayment"
             class="paymentButton"
-            style="line-height: 2.7rem"
             :disabled="selectedMember && selectedMember.id > 0"
         >
             <h2>Anonymous</h2>

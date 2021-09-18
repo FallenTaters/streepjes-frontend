@@ -1,8 +1,8 @@
 <template>
     <div class="text-left">
-        <h3>
+        <p class="h3">
             {{ member.name }}
-        </h3>
+        </p>
         Current Bill: {{ renderPrice(member.debt) }}
     </div>
 </template>

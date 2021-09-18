@@ -92,7 +92,7 @@ export default defineComponent({
 button {
     /* display: block; */
     border: none;
-    font-size: 1rem;
+    font-size: 1.1rem;
     width: 100%;
     box-sizing: border-box;
 }

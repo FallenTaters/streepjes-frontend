@@ -1,28 +1,30 @@
 <template>
-    <div class="flex">
-        <base-button :bordered="true" @click="click" style="width: 100%">
-            <member-info v-if="memberSelected" :member="selectedMember" />
-            <div v-else>No member selected</div>
-        </base-button>
-        <modal
-            v-if="showModal"
-            closeText="← Back"
-            @close="showModal = false"
-            :closeAbsolute="true"
-        >
-            <div>
-                <div style="text-align: right">
+    <base-button :bordered="true" @click="click" class="flex flex-center">
+        <member-info v-if="memberSelected" :member="selectedMember" />
+        <div v-else style="width: 100%">No member selected</div>
+    </base-button>
+    <modal
+        v-if="showModal"
+        closeText="← Back"
+        @close="showModal = false"
+        :closeAbsolute="true"
+    >
+        <div>
+            <div style="text-align: right">
+                <form @submit.prevent="submitMemberSearch">
                     <input
                         class="input-bigger"
                         type="text"
                         v-model="searchString"
                         placeholder="Search"
                     />
-                </div>
+                </form>
+            </div>
+            <div style="height: 400px; overflow: auto">
                 <member-grid :members="members" @select="selectMember" />
             </div>
-        </modal>
-    </div>
+        </div>
+    </modal>
 </template>
 
 <script lang="ts">
@@ -69,6 +71,14 @@ export default defineComponent({
             showModal.value = false
         }
 
+        function submitMemberSearch(): boolean {
+            if (members.value.length == 1) {
+                selectMember(members.value[0])
+                return true
+            }
+            return false
+        }
+
         return {
             searchString,
             showModal,
@@ -79,6 +89,7 @@ export default defineComponent({
 
             click,
             selectMember,
+            submitMemberSearch,
         }
     },
     components: { MemberInfo, MemberGrid },

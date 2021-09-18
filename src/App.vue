@@ -77,6 +77,10 @@ body {
     justify-content: space-between;
 }
 
+.flex-center {
+    align-items: center;
+}
+
 .square200 {
     height: 200px;
     width: 200px;
@@ -125,22 +129,22 @@ body {
 }
 
 .w-100 {
-    width: 100px;
+    width: 100px !important;
 }
 .w-150 {
-    width: 150px;
+    width: 150px !important;
 }
 .w-200 {
-    width: 200px;
+    width: 200px !important;
 }
 .w-250 {
-    width: 250px;
+    width: 250px !important;
 }
 .w-300 {
-    width: 300px;
+    width: 300px !important;
 }
 .w-400 {
-    width: 400px;
+    width: 400px !important;
 }
 
 .align-right {
@@ -178,5 +182,11 @@ body {
     border: 3px solid black;
     background-color: lightgray;
     font-size: 1.5rem;
+}
+
+.h3 {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-top: 0px;
 }
 </style>

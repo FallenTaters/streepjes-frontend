@@ -81,7 +81,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue"
+import { defineComponent, ref } from "vue"
 
 import { useStore } from "@/store/index"
 import { getOrders, deleteOrder } from "@/api/order"
@@ -101,7 +101,7 @@ export default defineComponent({
         const selectedOrder = ref<null | Order>(null)
         let orders: Order[] = []
         const loadState = ref<LoadState>(LoadState.Loading)
-        const shownOrders = computed<Order[]>(() => orders.slice(0, 10))
+        const shownOrders = ref<Order[]>([])
 
         async function processOrders() {
             loadState.value = LoadState.Failed
@@ -112,6 +112,7 @@ export default defineComponent({
             })
             orders.sort((o) => (o.orderDate ? -o.orderDate.getTime() : 0))
             loadState.value = LoadState.Success
+            shownOrders.value = orders.slice(0, 10)
         }
         processOrders()
 
