@@ -75,7 +75,13 @@ export default defineComponent({
             if (!allOrders) return
 
             orders.value = allOrders
-            orders.value.sort((o) => (o.orderDate ? -o.orderDate.getTime() : 0))
+            orders.value.sort((a, b) => {
+                if (!a.orderDate && !b.orderDate) return 0
+                if (!a.orderDate) return 1
+                if (!b.orderDate) return -1
+
+                return a.orderDate.getTime() - b.orderDate.getTime()
+            })
             loadState.value = LoadState.Success
         }
         load()
