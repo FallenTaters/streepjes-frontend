@@ -17,11 +17,19 @@ export function renderDate(p: Date): string {
     const timeString = `${hours}:${minutes}`
 
     let dateString
-    if (p.getDay() == new Date().getDay()) {
+    if (sameDay(p, new Date())) {
         dateString = "Today"
     } else {
         dateString = p.toLocaleDateString()
     }
 
     return `${dateString} ${timeString}`
+}
+
+function sameDay(a: Date, b: Date): boolean {
+    return (
+        a.getFullYear() == b.getFullYear() &&
+        a.getMonth() == b.getMonth() &&
+        a.getDate() == b.getDate()
+    )
 }
