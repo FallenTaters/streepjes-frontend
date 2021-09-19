@@ -4,6 +4,7 @@
             @click="addToBill"
             class="paymentButton"
             :disabled="!selectedMember"
+            style="min-height: 80px"
         >
             <h2>Member</h2>
         </base-button>
@@ -11,6 +12,7 @@
             @click="directPayment"
             class="paymentButton"
             :disabled="selectedMember && selectedMember.id > 0"
+            style="min-height: 80px"
         >
             <h2>Anonymous</h2>
         </base-button>

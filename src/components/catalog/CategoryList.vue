@@ -11,7 +11,7 @@
             @click="selectCategory(category.id)"
             @dblclick="doubleClickCategory(category.id)"
         >
-            {{ category.name }}
+            <div style="width: 100%">{{ category.name }}</div>
         </base-button>
     </div>
 </template>

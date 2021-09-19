@@ -7,7 +7,7 @@
             @click="selectMember(member)"
             :club="member.club"
         >
-            {{ member.name }}
+            <div style="width: 100%">{{ member.name }}</div>
         </base-button>
     </div>
 </template>
