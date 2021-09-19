@@ -1,7 +1,7 @@
 <template>
     <div class="auto-scroll">
         <base-button v-if="add" :bordered="true" :club="club" @click="emitAdd">
-            +
+            <div style="width: 100%">+</div>
         </base-button>
         <base-button
             v-for="product in products"

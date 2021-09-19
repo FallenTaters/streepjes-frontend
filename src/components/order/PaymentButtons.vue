@@ -3,18 +3,16 @@
         <base-button
             @click="addToBill"
             class="paymentButton"
-            style="line-height: 3rem"
             :disabled="!selectedMember"
         >
-            <h2>Member</h2>
+            <h1>Member</h1>
         </base-button>
         <base-button
             @click="directPayment"
             class="paymentButton"
-            style="line-height: 2.7rem"
             :disabled="selectedMember && selectedMember.id > 0"
         >
-            <h2>Anonymous</h2>
+            <h1>Anonymous</h1>
         </base-button>
 
         <modal
@@ -29,9 +27,11 @@
             <div style="padding: 30px; text-align: left; height: 200px">
                 <div v-if="showBill">
                     <member-info :member="selectedMember"> </member-info>
-                    <div>Amount: {{ renderPrice(totalPrice) }}</div>
+                    <div>
+                        <b>Amount: {{ renderPrice(totalPrice) }}</b>
+                    </div>
                     <hr />
-                    <b>Total: {{ billTotal }}</b>
+                    <div>New balance after payment: {{ billTotal }}</div>
                 </div>
                 <div v-else>
                     <p>
@@ -151,12 +151,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.paymentButton {
-    padding: 15px;
-    height: 50px;
-    width: 200px;
-}
-.paymentButton > h2 {
+.paymentButton > h1 {
     margin: 0px;
+    padding: 5px;
 }
 </style>

@@ -1,12 +1,13 @@
 <template>
     <div>
-        <form @submit.prevent="">
+        <form @submit.prevent="saveMember">
             <div class="form-row">
                 <div class="form-col">
                     <label for="memberName">Name</label>
                 </div>
                 <div class="form-col">
                     <input
+                        ref="memberNameInput"
                         id="memberName"
                         v-model="memberName"
                         class="form-input"
@@ -26,11 +27,7 @@
                     </base-button>
                 </div>
                 <div class="form-col">
-                    <base-button
-                        :club="userClub"
-                        :margin="0"
-                        @click="saveMember"
-                    >
+                    <base-button :club="userClub" :margin="0" submit>
                         {{ saveText }}
                     </base-button>
                 </div>
@@ -47,7 +44,13 @@
 import { deleteMember, postMember } from "@/api/members"
 import { useStore } from "@/store/index"
 import { Club, Member } from "@/type/member"
-import { computed, defineComponent, ref, watch } from "@vue/runtime-core"
+import {
+    computed,
+    defineComponent,
+    onMounted,
+    ref,
+    watch,
+} from "@vue/runtime-core"
 
 export default defineComponent({
     props: ["newMember", "id"],
@@ -113,6 +116,11 @@ export default defineComponent({
             }
         }
 
+        const memberNameInput = ref<HTMLElement | null>(null)
+        onMounted(() => {
+            memberNameInput.value?.focus()
+        })
+
         return {
             memberName,
             saveText,
@@ -121,6 +129,8 @@ export default defineComponent({
 
             saveMember,
             deleteMem,
+
+            memberNameInput,
         }
     },
 })

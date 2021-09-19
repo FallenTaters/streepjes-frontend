@@ -3,7 +3,7 @@
     <h1>Users</h1>
     <div class="flex-even">
         <base-button :bordered="true" :club="0" class="w-200" @click="addUser">
-            + New
+            <div style="width: 100%">+ New</div>
         </base-button>
         <input
             class="input-bigger"

@@ -1,7 +1,7 @@
 <template>
     <div class="auto-scroll">
         <base-button v-if="add" :bordered="true" :club="club" @click="emitAdd">
-            +
+            <div style="width: 100%">+</div>
         </base-button>
         <base-button
             v-for="category in categories"
@@ -11,7 +11,7 @@
             @click="selectCategory(category.id)"
             @dblclick="doubleClickCategory(category.id)"
         >
-            {{ category.name }}
+            <div style="width: 100%">{{ category.name }}</div>
         </base-button>
     </div>
 </template>

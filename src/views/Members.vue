@@ -8,7 +8,7 @@
             class="w-200"
             @click="addMember"
         >
-            + New
+            <div style="width: 100%">+ New</div>
         </base-button>
         <input
             class="input-bigger"
