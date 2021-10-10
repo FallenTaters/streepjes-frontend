@@ -13,6 +13,7 @@
             <div style="text-align: right">
                 <form @submit.prevent="submitMemberSearch">
                     <input
+                        ref="memberNameInput"
                         class="input-bigger"
                         type="text"
                         v-model="searchString"
@@ -58,12 +59,18 @@ export default defineComponent({
             return members
         })
 
+        const memberNameInput = ref<HTMLElement | null>(null)
+
         function click() {
             if (memberSelected.value) {
                 store.dispatch("unselectMember")
                 return
             }
             showModal.value = true
+
+            setTimeout(() => {
+                memberNameInput.value?.focus()
+            }, 100)
         }
 
         function selectMember(member: Member) {
@@ -90,6 +97,8 @@ export default defineComponent({
             click,
             selectMember,
             submitMemberSearch,
+
+            memberNameInput,
         }
     },
     components: { MemberInfo, MemberGrid },
