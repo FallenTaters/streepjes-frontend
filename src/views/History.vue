@@ -110,7 +110,16 @@ export default defineComponent({
                 loadState.value = LoadState.Failed
                 return []
             })
-            orders.sort((o) => (o.orderDate ? -o.orderDate.getTime() : 0))
+
+            orders.sort((o1, o2) => {
+                if (!o1.orderDate) {
+                    return +1
+                } else if (!o2.orderDate) {
+                    return -1
+                }
+
+                return o2.orderDate.getTime() - o1.orderDate.getTime()
+            })
             loadState.value = LoadState.Success
             shownOrders.value = orders.slice(0, 10)
         }
