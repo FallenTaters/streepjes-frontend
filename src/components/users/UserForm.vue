@@ -72,13 +72,13 @@
                         v-if="!newUser"
                         :club="myClub"
                         :margin="0"
-                        @click="deleteMem"
+                        @clicked="deleteMem"
                     >
                         Delete User
                     </base-button>
                 </div>
                 <div class="form-col">
-                    <base-button :club="myClub" :margin="0" @click="saveUser">
+                    <base-button :club="myClub" :margin="0" @clicked="saveUser">
                         {{ saveText }}
                     </base-button>
                 </div>

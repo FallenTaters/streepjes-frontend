@@ -22,7 +22,7 @@
                 v-for="orderline in orderlines"
                 :key="orderline.product.id"
                 class="flex-apart"
-                @click="removeProduct(orderline)"
+                @clicked="removeProduct(orderline)"
                 :bordered="true"
             >
                 <div>

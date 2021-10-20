@@ -62,7 +62,7 @@
                     <base-button
                         :club="userClub"
                         :margin="0"
-                        @click="discardProduct"
+                        @clicked="discardProduct"
                     >
                         {{ deleteText }}
                     </base-button>
@@ -71,7 +71,7 @@
                     <base-button
                         :club="userClub"
                         :margin="0"
-                        @click="saveProduct"
+                        @clicked="saveProduct"
                     >
                         {{ saveText }}
                     </base-button>
