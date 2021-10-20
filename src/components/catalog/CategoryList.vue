@@ -1,6 +1,11 @@
 <template>
     <div class="auto-scroll">
-        <base-button v-if="add" :bordered="true" :club="club" @click="emitAdd">
+        <base-button
+            v-if="add"
+            :bordered="true"
+            :club="club"
+            @clicked="emitAdd"
+        >
             <div style="width: 100%">+</div>
         </base-button>
         <base-button
@@ -8,7 +13,7 @@
             :selected="category.id == modelValue"
             :key="category.id"
             :club="buttonClub"
-            @click="selectCategory(category.id)"
+            @clicked="selectCategory(category.id)"
             @dblclick="doubleClickCategory(category.id)"
         >
             <div style="width: 100%">{{ category.name }}</div>

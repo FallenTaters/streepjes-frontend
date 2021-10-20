@@ -19,7 +19,7 @@
                     <base-button
                         :club="userClub"
                         :margin="0"
-                        @click="discardCategory"
+                        @clicked="discardCategory"
                     >
                         {{ deleteText }}
                     </base-button>
@@ -28,7 +28,7 @@
                     <base-button
                         :club="userClub"
                         :margin="0"
-                        @click="saveCategory"
+                        @clicked="saveCategory"
                     >
                         {{ saveText }}
                     </base-button>

@@ -20,7 +20,7 @@
                     />
                 </div>
                 <div class="form-row-center">
-                    <base-button @click="getCSV" :club="userClub">
+                    <base-button @clicked="getCSV" :club="userClub">
                         <div style="width: 100%">Download .csv file</div>
                     </base-button>
                 </div>

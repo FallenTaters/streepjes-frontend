@@ -6,7 +6,7 @@
         <div v-for="order in shownOrders" :key="order.id">
             <base-button
                 :club="order.club"
-                @click="showOrderModal(order)"
+                @clicked="showOrderModal(order)"
                 :disabled="order.status == OrderStatus.Cancelled"
                 :margin="5"
                 :padding="9"

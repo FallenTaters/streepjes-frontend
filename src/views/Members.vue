@@ -6,7 +6,7 @@
             :bordered="true"
             :club="userClub"
             class="w-200"
-            @click="addMember"
+            @clicked="addMember"
         >
             <div style="width: 100%">+ New</div>
         </base-button>

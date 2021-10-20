@@ -10,6 +10,7 @@
         }"
         :style="style"
         :type="buttonType"
+        @click="clicked"
     >
         <slot></slot>
     </button>
@@ -20,7 +21,7 @@ import { defineComponent, computed } from "vue"
 import { useStore } from "@/store/index"
 import { Club } from "@/type/member"
 export default defineComponent({
-    setup(props) {
+    setup(props, { emit }) {
         const store = useStore()
 
         const gladiators = computed(() => {
@@ -48,11 +49,16 @@ export default defineComponent({
             return `button`
         })
 
+        function clicked() {
+            if (!props.disabled) emit("clicked")
+        }
+
         return {
             gladiators,
             parabool,
             style,
             buttonType,
+            clicked,
         }
     },
     props: {
@@ -106,6 +112,7 @@ button {
     cursor: pointer;
 }
 .card.disabled {
+    cursor: inherit !important;
     background-color: gray !important;
 }
 

@@ -1,6 +1,11 @@
 <template>
     <div class="auto-scroll">
-        <base-button v-if="add" :bordered="true" :club="club" @click="emitAdd">
+        <base-button
+            v-if="add"
+            :bordered="true"
+            :club="club"
+            @clicked="emitAdd"
+        >
             <div style="width: 100%">+</div>
         </base-button>
         <base-button
@@ -8,7 +13,7 @@
             :key="product.id"
             :club="club"
             class="flex-apart"
-            @click="clickProduct(product)"
+            @clicked="clickProduct(product)"
             :selected="selectedProductId == product.id"
         >
             <div>{{ product.name }}</div>

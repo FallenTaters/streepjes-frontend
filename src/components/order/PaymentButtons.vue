@@ -1,14 +1,14 @@
 <template>
     <div class="flex-even">
         <base-button
-            @click="addToBill"
+            @clicked="addToBill"
             class="paymentButton"
             :disabled="!selectedMember"
         >
             <h1>Member</h1>
         </base-button>
         <base-button
-            @click="directPayment"
+            @clicked="directPayment"
             class="paymentButton"
             :disabled="selectedMember && selectedMember.id > 0"
         >
@@ -41,7 +41,9 @@
                 </div>
             </div>
             <div style="margin-top: 10px">
-                <base-button @click="confirm">Confirm</base-button>
+                <base-button @clicked="confirm" :disabled="disableConfirm">
+                    Confirm
+                </base-button>
             </div>
             <div class="errorMessage">
                 {{ errorMsg }}
@@ -100,6 +102,7 @@ export default defineComponent({
 
         // confirm
         const errorMsg = ref<string>("")
+        const disableConfirm = ref<boolean>(false)
         let timeOut: number
 
         function errorMessage(msg: string) {
@@ -109,6 +112,8 @@ export default defineComponent({
         }
 
         async function confirm() {
+            disableConfirm.value = true
+
             const o = Object.assign({}, store.getters.order)
             if (showBill.value) {
                 o.status = OrderStatus.Open
@@ -128,6 +133,9 @@ export default defineComponent({
                 .catch(() => {
                     errorMessage("Unable to place order")
                 })
+                .finally(() => {
+                    disableConfirm.value = false
+                })
         }
 
         return {
@@ -144,6 +152,8 @@ export default defineComponent({
             addToBill,
             directPayment,
             confirm,
+
+            disableConfirm,
         }
     },
     components: { MemberInfo, BaseButton },

@@ -102,6 +102,7 @@ body {
     border-radius: 5px;
     border: none;
     font-size: 1.2em;
+    cursor: pointer;
 }
 
 .auto-scroll {

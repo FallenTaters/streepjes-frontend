@@ -4,7 +4,7 @@
             style="font-size: 0.7em"
             v-for="member in members"
             :key="member.id"
-            @click="selectMember(member)"
+            @clicked="selectMember(member)"
             :club="member.club"
         >
             <div style="width: 100%">{{ member.name }}</div>

@@ -21,7 +21,7 @@
                         v-if="!newMember"
                         :club="userClub"
                         :margin="0"
-                        @click="deleteMem"
+                        @clicked="deleteMem"
                     >
                         Delete Member
                     </base-button>

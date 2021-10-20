@@ -1,5 +1,5 @@
 <template>
-    <base-button :bordered="true" @click="click" class="flex flex-center">
+    <base-button :bordered="true" @clicked="click" class="flex flex-center">
         <member-info v-if="memberSelected" :member="selectedMember" />
         <div v-else style="width: 100%">No member selected</div>
     </base-button>
