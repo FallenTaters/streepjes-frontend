@@ -15,7 +15,7 @@ import { useStore } from "@/store/index"
 import { postActive } from "@/api/auth"
 import { renderTime, minute } from "@/type/time"
 
-const maxTimeInactive = 5 * minute
+const maxTimeInactive = 10 * minute
 const warningTimeLeft = 3 * minute
 const timeBetweenCalls = 0.5 * minute
 
