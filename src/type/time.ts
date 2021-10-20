@@ -11,7 +11,9 @@ export function renderTime(time: number): string {
     return `${minutes}:${seconds}`
 }
 
-export function renderDate(p: Date): string {
+export function renderDate(p: Date | undefined): string {
+    if (!p) return ""
+
     const hours = p.getHours().toString().padStart(2, "0")
     const minutes = p.getMinutes().toString().padStart(2, "0")
     const timeString = `${hours}:${minutes}`
