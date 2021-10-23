@@ -56,8 +56,6 @@ export default defineComponent({
         const orders = ref<Order[]>([])
         const month = ref<string>(formatAsMonth(new Date()))
 
-        store.dispatch("fetchUserClub")
-
         async function load() {
             await store.dispatch("fetchMembers")
             const yearString = month.value.substring(0, 4)
