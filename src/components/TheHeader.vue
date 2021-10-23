@@ -6,7 +6,7 @@
         <div @click="catalog" v-if="isAdmin">Catalog</div>
         <div @click="members" v-if="isAdmin">Members</div>
         <div @click="billing" v-if="isAdmin">Billing</div>
-        <div @click="logout">Log Out</div>
+        <div @click="dropdown">{{ username }}</div>
     </div>
 </template>
 
@@ -21,6 +21,7 @@ export default defineComponent({
     setup() {
         const store = useStore()
         const router = useRouter()
+        store.dispatch("fetchMe")
 
         const isAdmin = computed<boolean>(
             () => store.getters.role == Role.Admin
@@ -29,6 +30,8 @@ export default defineComponent({
         const isBartender = computed<boolean>(
             () => store.getters.role == Role.Bartender
         )
+
+        const username = computed<string>(() => store.getters.username)
 
         function logout() {
             postLogout()
@@ -60,9 +63,14 @@ export default defineComponent({
             router.push("/catalog")
         }
 
+        function dropdown() {
+            // WHAT NOW
+        }
+
         return {
             isAdmin,
             isBartender,
+            username,
 
             logout,
             order,
