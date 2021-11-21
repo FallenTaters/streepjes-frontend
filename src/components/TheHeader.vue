@@ -6,12 +6,33 @@
         <div @click="catalog" v-if="isAdmin">Catalog</div>
         <div @click="members" v-if="isAdmin">Members</div>
         <div @click="billing" v-if="isAdmin">Billing</div>
-        <div @click="dropdown">{{ username }}</div>
+        <div>
+            <div @click="toggleDropdown">
+                {{ username }}
+            </div>
+            <div id="auth-dropdown" v-if="showDropdown">
+                <ul>
+                    <li class="dropdown-item">
+                        <button
+                            class="dropdown-item-button"
+                            @click="changePassword"
+                        >
+                            Change Password
+                        </button>
+                    </li>
+                    <li class="dropdown-item">
+                        <button class="dropdown-item-button" @click="logout">
+                            Log Out
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue"
+import { computed, defineComponent, ref } from "vue"
 import { useRouter } from "vue-router"
 import { useStore } from "@/store/index"
 import { Role } from "@/type/user"
@@ -63,8 +84,9 @@ export default defineComponent({
             router.push("/catalog")
         }
 
-        function dropdown() {
-            // WHAT NOW
+        const showDropdown = ref<boolean>(false)
+        function toggleDropdown() {
+            showDropdown.value = !showDropdown.value
         }
 
         return {
@@ -79,6 +101,9 @@ export default defineComponent({
             members,
             billing,
             catalog,
+
+            showDropdown,
+            toggleDropdown,
         }
     },
 })
@@ -86,11 +111,12 @@ export default defineComponent({
 
 <style scoped>
 #header {
-    background-color: #444444;
+    background-color: #444;
     color: whitesmoke;
-    box-shadow: #444444 0 2px 5px;
+    box-shadow: #444 0 2px 5px;
     display: flex;
     justify-content: space-between;
+    height: 45px;
 }
 
 #header > div {
@@ -98,11 +124,44 @@ export default defineComponent({
 }
 
 #header > div:hover {
-    background-color: #333333;
+    background-color: #333;
 }
 
 #header > div:active {
-    background-color: #999999;
+    background-color: #999;
     color: black;
+}
+
+.dropdown-item {
+    background-color: #444;
+}
+
+.dropown-item:hover {
+    background-color: #333;
+}
+
+.dropdown-item-button {
+    margin: 0px;
+    width: 100%;
+    font-size: 1.15rem;
+    height: 45px;
+    background-color: #444;
+    border: none;
+    color: whitesmoke;
+}
+
+.dropdown-item-button:hover {
+    background-color: #333;
+}
+
+.dropdown-item-button:active {
+    background-color: #999;
+    color: black;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 </style>
