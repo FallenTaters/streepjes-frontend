@@ -2,7 +2,7 @@ import { Module } from "vuex"
 import { Role, User } from "@/type/user"
 import { State } from "."
 import { Club } from "@/type/member"
-import { getClub } from "@/api/auth"
+import { getClub, getMe } from "@/api/auth"
 import { getUsers } from "@/api/users"
 
 export interface UserState {
@@ -10,6 +10,7 @@ export interface UserState {
     lastActive: Date
     club: Club
     users: User[]
+    me: User | null
 }
 
 export const userStore: Module<UserState, State> = {
@@ -18,6 +19,7 @@ export const userStore: Module<UserState, State> = {
         lastActive: new Date(),
         club: Club.Unknown,
         users: [],
+        me: null,
     },
     getters: {
         userClub(state): Club {
@@ -40,6 +42,9 @@ export const userStore: Module<UserState, State> = {
                 return state.users.find((u: User) => u.username === username)
             }
         },
+        me(state): User | null {
+            return state.me
+        },
     },
     mutations: {
         setRole(state, role: string) {
@@ -54,6 +59,9 @@ export const userStore: Module<UserState, State> = {
         setUsers(state, users: User[]) {
             state.users = users
         },
+        setMe(state, me: User) {
+            state.me = me
+        },
     },
     actions: {
         setRole({ commit }, role: string) {
@@ -65,14 +73,15 @@ export const userStore: Module<UserState, State> = {
         unauthorized({ dispatch }) {
             dispatch("setRole", Role.NotAuthorized)
         },
+        async fetchMe({ commit, dispatch }) {
+            getMe()
+                .then((me) => commit("setMe", me))
+                .catch(() => dispatch("unauthorized"))
+        },
         async fetchUserClub({ commit, dispatch }) {
             getClub()
-                .then((club) => {
-                    commit("setUserClub", club)
-                })
-                .catch(() => {
-                    dispatch("unauthorized")
-                })
+                .then((club) => commit("setUserClub", club))
+                .catch(() => dispatch("unauthorized"))
         },
         async fetchUsers({ commit, dispatch }) {
             let resp
