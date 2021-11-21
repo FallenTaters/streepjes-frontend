@@ -2,12 +2,13 @@ import { Module } from "vuex"
 import { Role, User } from "@/type/user"
 import { State } from "."
 import { Club } from "@/type/member"
-import { getClub } from "@/api/auth"
+import { getMe } from "@/api/auth"
 import { getUsers } from "@/api/users"
 
 export interface UserState {
     currentRole: string
     lastActive: Date
+    username: string
     club: Club
     users: User[]
 }
@@ -16,6 +17,7 @@ export const userStore: Module<UserState, State> = {
     state: {
         currentRole: Role.NotAuthorized,
         lastActive: new Date(),
+        username: "",
         club: Club.Unknown,
         users: [],
     },
@@ -40,6 +42,9 @@ export const userStore: Module<UserState, State> = {
                 return state.users.find((u: User) => u.username === username)
             }
         },
+        username(state): string {
+            return state.username
+        },
     },
     mutations: {
         setRole(state, role: string) {
@@ -54,6 +59,9 @@ export const userStore: Module<UserState, State> = {
         setUsers(state, users: User[]) {
             state.users = users
         },
+        setUsername(state, username: string) {
+            state.username = username
+        },
     },
     actions: {
         setRole({ commit }, role: string) {
@@ -65,10 +73,11 @@ export const userStore: Module<UserState, State> = {
         unauthorized({ dispatch }) {
             dispatch("setRole", Role.NotAuthorized)
         },
-        async fetchUserClub({ commit, dispatch }) {
-            getClub()
-                .then((club) => {
-                    commit("setUserClub", club)
+        async fetchMe({ commit, dispatch }) {
+            getMe()
+                .then((user) => {
+                    commit("setUserClub", user.club)
+                    commit("setUsername", user.username)
                 })
                 .catch(() => {
                     dispatch("unauthorized")

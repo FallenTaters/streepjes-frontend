@@ -38,7 +38,6 @@ import MemberForm from "@/components/members/MemberForm.vue"
 export default defineComponent({
     setup() {
         const store = useStore()
-        store.dispatch("fetchUserClub")
         store.dispatch("fetchMembers")
 
         const searchString = ref<string>("")

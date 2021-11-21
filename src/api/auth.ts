@@ -1,4 +1,4 @@
-import { Club } from "@/type/member"
+import { User } from "@/type/user"
 import { apiEndpoint } from "./settings"
 import { doFetch } from "./type"
 
@@ -30,6 +30,13 @@ export async function postLogout(): Promise<Response> {
     })
 }
 
-export async function getClub(): Promise<Club> {
-    return await doFetch(apiEndpoint + `/club`)
+export async function getMe(): Promise<User> {
+    return await doFetch(apiEndpoint + `/me`)
+}
+
+export async function postMe(): Promise<Response> {
+    return await fetch(apiEndpoint + `/me`, {
+        method: "POST",
+        credentials: "include",
+    })
 }

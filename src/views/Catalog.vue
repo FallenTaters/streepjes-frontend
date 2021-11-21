@@ -69,7 +69,6 @@ export default defineComponent({
         const store = useStore()
         // fetch stuff
         store.dispatch("fetchCatalog")
-        store.dispatch("fetchUserClub")
 
         // map getters
         const catalogLoadState = computed<LoadState>(
