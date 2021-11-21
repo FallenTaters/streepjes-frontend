@@ -38,6 +38,12 @@ const routes: Array<RouteRecordRaw> = [
         beforeEnter: authGuard,
     },
     {
+        path: "/change-password",
+        name: "changePassword",
+        component: () => import("../views/ChangePassword.vue"),
+        beforeEnter: authGuard,
+    },
+    {
         path: "/history",
         name: "history",
         component: () => import("../views/History.vue"),

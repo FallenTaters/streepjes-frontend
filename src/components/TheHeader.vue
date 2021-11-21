@@ -84,6 +84,10 @@ export default defineComponent({
             router.push("/catalog")
         }
 
+        function changePassword() {
+            router.push("/change-password")
+        }
+
         const showDropdown = ref<boolean>(false)
         function toggleDropdown() {
             showDropdown.value = !showDropdown.value
@@ -104,6 +108,7 @@ export default defineComponent({
 
             showDropdown,
             toggleDropdown,
+            changePassword,
         }
     },
 })
