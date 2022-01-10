@@ -5,17 +5,17 @@
         <form @submit.prevent="login">
             <div class="form-row-center">
                 <input
+                    v-model="username"
                     type="text"
                     placeholder="Username"
-                    v-model="username"
                     class="input-bigger wide"
                 />
             </div>
             <div class="form-row-center">
                 <input
+                    v-model="password"
                     type="password"
                     placeholder="Password"
-                    v-model="password"
                     class="input-bigger wide"
                 />
             </div>

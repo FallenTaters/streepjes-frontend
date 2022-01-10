@@ -1,11 +1,11 @@
 <template>
     <div id="header">
-        <div @click="order" v-if="isBartender">Order</div>
-        <div @click="history" v-if="isBartender">History</div>
-        <div @click="users" v-if="isAdmin">Users</div>
-        <div @click="catalog" v-if="isAdmin">Catalog</div>
-        <div @click="members" v-if="isAdmin">Members</div>
-        <div @click="billing" v-if="isAdmin">Billing</div>
+        <div v-if="isBartender" @click="order">Order</div>
+        <div v-if="isBartender" @click="history">History</div>
+        <div v-if="isAdmin" @click="users">Users</div>
+        <div v-if="isAdmin" @click="catalog">Catalog</div>
+        <div v-if="isAdmin" @click="members">Members</div>
+        <div v-if="isAdmin" @click="billing">Billing</div>
         <div @click="logout">Log Out</div>
     </div>
 </template>

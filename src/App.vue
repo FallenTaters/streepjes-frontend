@@ -21,8 +21,8 @@ import { Role } from "@/type/user"
 import ActiveWatcher from "@/components/activity/ActiveWatcher.vue"
 
 export default defineComponent({
-    components: { ActiveWatcher },
     name: "App",
+    components: { ActiveWatcher },
     setup() {
         const store = useStore()
         const router = useRouter()

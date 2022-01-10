@@ -21,6 +21,36 @@ import { defineComponent, computed } from "vue"
 import { useStore } from "@/store/index"
 import { Club } from "@/type/member"
 export default defineComponent({
+    props: {
+        selected: {
+            type: Boolean,
+            default: false,
+        },
+        bordered: {
+            type: Boolean,
+            default: false,
+        },
+        disabled: {
+            type: Boolean,
+            default: false,
+        },
+        club: {
+            type: Number,
+            default: null,
+        },
+        margin: {
+            type: Number,
+            default: 10,
+        },
+        padding: {
+            type: Number,
+            default: 15,
+        },
+        submit: {
+            type: Boolean,
+            default: false,
+        },
+    },
     setup(props, { emit }) {
         const store = useStore()
 
@@ -60,36 +90,6 @@ export default defineComponent({
             buttonType,
             clicked,
         }
-    },
-    props: {
-        selected: {
-            type: Boolean,
-            default: false,
-        },
-        bordered: {
-            type: Boolean,
-            default: false,
-        },
-        disabled: {
-            type: Boolean,
-            default: false,
-        },
-        club: {
-            type: Number,
-            default: null,
-        },
-        margin: {
-            type: Number,
-            default: 10,
-        },
-        padding: {
-            type: Number,
-            default: 15,
-        },
-        submit: {
-            type: Boolean,
-            default: false,
-        },
     },
 })
 </script>

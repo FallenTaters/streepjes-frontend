@@ -8,7 +8,7 @@
                         class="close-container"
                         :class="closeClass"
                     >
-                        <button @click="emitClose" class="badge-link">
+                        <button class="badge-link" @click="emitClose">
                             {{ closeText }}
                         </button>
                     </div>

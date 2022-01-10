@@ -12,12 +12,12 @@ import { defineComponent } from "vue"
 import { renderPrice } from "@/type/catalog"
 
 export default defineComponent({
+    props: ["member"],
     setup() {
         return {
             renderPrice,
         }
     },
-    props: ["member"],
 })
 </script>
 
