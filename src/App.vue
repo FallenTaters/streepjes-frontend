@@ -43,3 +43,10 @@ export default defineComponent({
     },
 })
 </script>
+
+<style>
+.full-height-container {
+    box-sizing: border-box;
+    height: 100vh;
+}
+</style>

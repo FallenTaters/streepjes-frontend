@@ -3,7 +3,7 @@
         <h1 class="l m large-margin">Streepjes</h1>
         <h3 class="s large-margin">Streepjes</h3>
         <form @submit.prevent="login">
-            <div class="field fill border extra">
+            <div class="field fill border">
                 <input
                     class="center-align"
                     type="text"
@@ -11,7 +11,7 @@
                     placeholder="Username"
                 />
             </div>
-            <div class="field fill border extra">
+            <div class="field fill border">
                 <input
                     class="center-align"
                     type="password"
@@ -20,7 +20,7 @@
                 />
             </div>
             <div class="large-margin">
-                <button class="circle indigo large-padding" type="submit">
+                <button class="circle indigo small-padding" type="submit">
                     <i>login</i>
                 </button>
             </div>

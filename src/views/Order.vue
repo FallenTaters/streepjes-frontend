@@ -7,22 +7,34 @@
         or
         <router-link to="/login">log in again.</router-link>
     </h1>
-    <div v-else class="container">
+    <div
+        v-else
+        class="container full-height-container"
+        style="
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        "
+    >
         <div class="row">
-            <div class="col l4">
-                <h2>Category</h2>
+            <div class="col l4 m4 s12">
+                <h2 class="l">Category</h2>
+                <h4 class="s m">Category</h4>
                 <category-list v-model="selectedCategoryID" />
             </div>
-            <div class="col l4">
-                <h2>Product</h2>
+            <div class="col l4 m4 s12">
+                <h2 class="l">Product</h2>
+                <h4 class="s m">Product</h4>
                 <product-list
                     @select-product="addProduct"
                     :club="club"
                     :categoryID="selectedCategoryID"
                 />
             </div>
-            <div class="col l4">
-                <h2>Order</h2>
+            <div class="col l4 m4 s12">
+                <h2 class="l">Order</h2>
+                <h4 class="s m">Order</h4>
                 <div id="bill" class="auto-scroll">
                     <base-button
                         v-for="orderline in orderlines"
@@ -42,19 +54,19 @@
                 </div>
             </div>
         </div>
-        <div class="row bottom">
-            <div class="col l4">
+        <div class="row">
+            <div class="col l4 m4 s12">
                 <club-select />
             </div>
 
-            <div class="col l4">
+            <div class="col l4 m4 s12">
                 <member-select />
             </div>
 
-            <div class="col l4">
+            <div class="col l4 m4 s12">
                 <div class="flex-apart paymentTotal">
-                    <h2>Total</h2>
-                    <h2>{{ renderPrice(totalPrice) }}</h2>
+                    <h4 class="l">Total {{ renderPrice(totalPrice) }}</h4>
+                    <h4 class="m s">Total {{ renderPrice(totalPrice) }}</h4>
                 </div>
                 <payment-buttons v-if="readyToPay" />
             </div>
