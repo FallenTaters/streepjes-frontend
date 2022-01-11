@@ -57,4 +57,9 @@ export default defineComponent({
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.square150 {
+    height: 150px;
+    width: 150px;
+}
+</style>

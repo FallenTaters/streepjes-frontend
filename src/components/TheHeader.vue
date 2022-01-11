@@ -1,5 +1,5 @@
 <template>
-    <div class="menu top large-space">
+    <header-wrapper>
         <a @click="order" v-if="isBartender"><i>shopping_cart</i></a>
         <a @click="history" v-if="isBartender"><i>history</i></a>
         <a @click="users" v-if="isAdmin"><i>manage_accounts</i></a>
@@ -7,7 +7,7 @@
         <a @click="members" v-if="isAdmin"><i>people</i></a>
         <a @click="billing" v-if="isAdmin"><i>attach_money</i></a>
         <a @click="logout"><i>logout</i></a>
-    </div>
+    </header-wrapper>
 </template>
 
 <script lang="ts">
@@ -16,8 +16,10 @@ import { useRouter } from "vue-router"
 import { useStore } from "@/store/index"
 import { Role } from "@/type/user"
 import { postLogout } from "@/api/auth"
+import HeaderWrapper from "./HeaderWrapper.vue"
 
 export default defineComponent({
+    components: { HeaderWrapper },
     setup() {
         const store = useStore()
         const router = useRouter()

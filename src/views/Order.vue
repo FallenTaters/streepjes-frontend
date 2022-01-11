@@ -1,45 +1,57 @@
 <template>
     <the-header></the-header>
-    <div class="container">
-        <h1 v-if="catalogLoadState == LoadState.Loading">Loading...</h1>
-        <h1 v-if="catalogLoadState == LoadState.Failed">
-            Failed to load.
-            <a href="#" onclick="window.location.reload();">Refresh the page</a>
-            or
-            <router-link to="/login">log in again.</router-link>
-        </h1>
-        <div class="container" v-if="catalogLoadState == LoadState.Success">
-            <h2>Category</h2>
-            <h2>Product</h2>
-            <h2>Order</h2>
-            <category-list v-model="selectedCategoryID" />
-            <product-list
-                @select-product="addProduct"
-                :club="club"
-                :categoryID="selectedCategoryID"
-            />
-            <div id="bill" class="auto-scroll">
-                <base-button
-                    v-for="orderline in orderlines"
-                    :key="orderline.product.id"
-                    class="flex-apart"
-                    @clicked="removeProduct(orderline)"
-                    :bordered="true"
-                >
-                    <div>
-                        <b>x{{ orderline.amount }}</b>
-                    </div>
-                    <div>{{ orderline.product.name }}</div>
-                    <div>
-                        {{ renderPrice(orderlinePrice(orderline, club)) }}
-                    </div>
-                </base-button>
+    <h1 v-if="catalogLoadState == LoadState.Loading">Loading...</h1>
+    <h1 v-if="catalogLoadState == LoadState.Failed">
+        Failed to load.
+        <a href="#" onclick="window.location.reload();">Refresh the page</a>
+        or
+        <router-link to="/login">log in again.</router-link>
+    </h1>
+    <div v-else class="container">
+        <div class="row">
+            <div class="col l4">
+                <h2>Category</h2>
+                <category-list v-model="selectedCategoryID" />
+            </div>
+            <div class="col l4">
+                <h2>Product</h2>
+                <product-list
+                    @select-product="addProduct"
+                    :club="club"
+                    :categoryID="selectedCategoryID"
+                />
+            </div>
+            <div class="col l4">
+                <h2>Order</h2>
+                <div id="bill" class="auto-scroll">
+                    <base-button
+                        v-for="orderline in orderlines"
+                        :key="orderline.product.id"
+                        class="flex-apart"
+                        @clicked="removeProduct(orderline)"
+                        :bordered="true"
+                    >
+                        <div>
+                            <b>x{{ orderline.amount }}</b>
+                        </div>
+                        <div>{{ orderline.product.name }}</div>
+                        <div>
+                            {{ renderPrice(orderlinePrice(orderline, club)) }}
+                        </div>
+                    </base-button>
+                </div>
+            </div>
+        </div>
+        <div class="row bottom">
+            <div class="col l4">
+                <club-select />
             </div>
 
-            <club-select />
-            <member-select />
+            <div class="col l4">
+                <member-select />
+            </div>
 
-            <div>
+            <div class="col l4">
                 <div class="flex-apart paymentTotal">
                     <h2>Total</h2>
                     <h2>{{ renderPrice(totalPrice) }}</h2>
