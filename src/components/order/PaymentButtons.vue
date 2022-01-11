@@ -10,7 +10,7 @@
         <base-button
             @clicked="directPayment"
             class="paymentButton"
-            :disabled="selectedMember && selectedMember.id > 0"
+            :disabled="selectedMember != null && selectedMember.id > 0"
         >
             <h1>Anonymous</h1>
         </base-button>
