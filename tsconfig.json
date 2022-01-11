@@ -10,12 +10,12 @@
         "resolveJsonModule": true,
         "esModuleInterop": true,
         "lib": ["esnext", "dom"],
-        "types": ["vitest/global"],
         "paths": {
             "@/*": [
                 "./src/*"
             ]
-        }
+        },
+        "types": ["node"]
     },
     "include": [
         "src/**/*.ts",
