@@ -1,5 +1,5 @@
 <template>
-    <div id="header">
+    <div class="menu m l top">
         <div @click="order" v-if="isBartender">Order</div>
         <div @click="history" v-if="isBartender">History</div>
         <div @click="users" v-if="isAdmin">Users</div>
@@ -75,26 +75,3 @@ export default defineComponent({
     },
 })
 </script>
-
-<style scoped>
-#header {
-    background-color: #444444;
-    color: whitesmoke;
-    box-shadow: #444444 0 2px 5px;
-    display: flex;
-    justify-content: space-between;
-}
-
-#header > div {
-    padding: 8px;
-}
-
-#header > div:hover {
-    background-color: #333333;
-}
-
-#header > div:active {
-    background-color: #999999;
-    color: black;
-}
-</style>
