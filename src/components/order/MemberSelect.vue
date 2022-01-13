@@ -22,7 +22,7 @@
                 </form>
             </div>
             <div style="height: 400px; overflow: auto">
-                <member-grid :members="members" @select="selectMember" />
+                <member-grid :members="members" @select="(_: Event, m: Member) => {selectMember(m)}" />
             </div>
         </div>
     </modal>

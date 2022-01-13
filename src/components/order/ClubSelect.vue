@@ -39,9 +39,9 @@ export default defineComponent({
         const src = computed(() => {
             switch (club.value) {
                 case Club.Parabool:
-                    return require("@/assets/paraboologo.jpg")
+                    return "paraboologo.jpg"
                 case Club.Gladiators:
-                    return require("@/assets/gladiatorslogo.jpg")
+                    return "gladiatorslogo.jpg"
                 default:
                     toggleClub()
                     return ""

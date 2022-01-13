@@ -77,7 +77,7 @@ export default defineComponent({
             () => store.getters.catalogLoadState
         )
         const club = computed<Club>(() => store.getters.club)
-        const orderlines = computed<Club>(() => store.getters.orderlines)
+        const orderlines = computed<Orderline[]>(() => store.getters.orderlines)
         const totalPrice = computed<Club>(() => store.getters.totalPrice)
 
         // category selection

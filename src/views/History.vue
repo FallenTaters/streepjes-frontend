@@ -1,7 +1,7 @@
 <template>
     <the-header></the-header>
     <h1>Last Orders</h1>
-    <h3 v-if="loadState == 'Loading'">Loading...</h3>
+    <h3 v-if="loadState == Loading">Loading...</h3>
     <div id="orders">
         <div v-for="order in shownOrders" :key="order.id">
             <base-button
@@ -165,6 +165,7 @@ export default defineComponent({
             selectedOrder,
             shownOrders,
             loadState,
+            Loading: LoadState.Loading,
             disableDeleteButton,
 
             showOrderModal,

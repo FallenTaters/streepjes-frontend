@@ -1,6 +1,7 @@
 import { Club } from "./member"
 
-export function renderPrice(price: number): string {
+export function renderPrice(price: number | undefined): string {
+    if (!price) price = 0
     return `€ ${(price / 100).toFixed(2)}`
 }
 
