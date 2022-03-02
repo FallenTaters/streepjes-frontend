@@ -7,43 +7,69 @@
         or
         <router-link to="/login">log in again.</router-link>
     </h1>
-    <div class="container" v-if="catalogLoadState == LoadState.Success">
-        <h2>Category</h2>
-        <h2>Product</h2>
-        <h2>Order</h2>
-        <category-list v-model="selectedCategoryID" />
-        <product-list
-            @select-product="addProduct"
-            :club="club"
-            :categoryID="selectedCategoryID"
-        />
-        <div id="bill" class="auto-scroll">
-            <base-button
-                v-for="orderline in orderlines"
-                :key="orderline.product.id"
-                class="flex-apart"
-                @clicked="removeProduct(orderline)"
-                :bordered="true"
-            >
-                <div>
-                    <b>x{{ orderline.amount }}</b>
-                </div>
-                <div>{{ orderline.product.name }}</div>
-                <div>
-                    {{ renderPrice(orderlinePrice(orderline, club)) }}
-                </div>
-            </base-button>
-        </div>
-
-        <club-select />
-        <member-select />
-
-        <div>
-            <div class="flex-apart paymentTotal">
-                <h2>Total</h2>
-                <h2>{{ renderPrice(totalPrice) }}</h2>
+    <div
+        v-else
+        class="container full-height-container"
+        style="
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        "
+    >
+        <div class="row">
+            <div class="col l4 m4 s12">
+                <h2 class="l">Category</h2>
+                <h4 class="s m">Category</h4>
+                <category-list v-model="selectedCategoryID" />
             </div>
-            <payment-buttons v-if="readyToPay" />
+            <div class="col l4 m4 s12">
+                <h2 class="l">Product</h2>
+                <h4 class="s m">Product</h4>
+                <product-list
+                    @select-product="addProduct"
+                    :club="club"
+                    :categoryID="selectedCategoryID"
+                />
+            </div>
+            <div class="col l4 m4 s12">
+                <h2 class="l">Order</h2>
+                <h4 class="s m">Order</h4>
+                <div id="bill" class="auto-scroll">
+                    <base-button
+                        v-for="orderline in orderlines"
+                        :key="orderline.product.id"
+                        class="flex-apart"
+                        @clicked="removeProduct(orderline)"
+                        :bordered="true"
+                    >
+                        <div>
+                            <b>x{{ orderline.amount }}</b>
+                        </div>
+                        <div>{{ orderline.product.name }}</div>
+                        <div>
+                            {{ renderPrice(orderlinePrice(orderline, club)) }}
+                        </div>
+                    </base-button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col l4 m4 s12">
+                <club-select />
+            </div>
+
+            <div class="col l4 m4 s12">
+                <member-select />
+            </div>
+
+            <div class="col l4 m4 s12">
+                <div class="flex-apart paymentTotal">
+                    <h4 class="l">Total {{ renderPrice(totalPrice) }}</h4>
+                    <h4 class="m s">Total {{ renderPrice(totalPrice) }}</h4>
+                </div>
+                <payment-buttons v-if="readyToPay" />
+            </div>
         </div>
     </div>
 </template>
@@ -77,8 +103,8 @@ export default defineComponent({
             () => store.getters.catalogLoadState
         )
         const club = computed<Club>(() => store.getters.club)
-        const orderlines = computed<Club>(() => store.getters.orderlines)
-        const totalPrice = computed<Club>(() => store.getters.totalPrice)
+        const orderlines = computed<Orderline[]>(() => store.getters.orderlines)
+        const totalPrice = computed<number>(() => store.getters.totalPrice)
 
         // category selection
         const selectedCategoryID = ref<number>(0)
@@ -131,22 +157,3 @@ export default defineComponent({
     },
 })
 </script>
-
-<style scoped>
-.container {
-    height: 94vh;
-    justify-content: stretch;
-    margin-left: auto;
-    margin-right: auto;
-    display: grid;
-    grid-template-columns: 20% 35% 45%;
-    grid-template-rows: 10% 65% 25%;
-}
-
-.paymentTotal {
-    margin: 0 20px;
-}
-.paymentTotal > h2 {
-    margin: 0px;
-}
-</style>

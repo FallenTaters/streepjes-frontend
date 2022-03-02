@@ -17,6 +17,7 @@ import { Member } from "@/type/member"
 import { defineComponent } from "@vue/runtime-core"
 export default defineComponent({
     props: ["members"],
+    emits: ["select"],
     setup(props, { emit }) {
         function selectMember(member: Member): void {
             emit("select", member)

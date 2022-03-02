@@ -1,28 +1,30 @@
 <template>
-    <h1>Streepjeslijst Parabool / Gladiators</h1>
-    <div class="container">
-        <h2>Log In</h2>
+    <div class="center-align container">
+        <h1 class="l m large-margin">Streepjes</h1>
+        <h3 class="s large-margin">Streepjes</h3>
         <form @submit.prevent="login">
-            <div class="form-row-center">
+            <div class="field fill border">
                 <input
+                    class="center-align"
                     type="text"
-                    placeholder="Username"
                     v-model="username"
-                    class="input-bigger wide"
+                    placeholder="Username"
                 />
             </div>
-            <div class="form-row-center">
+            <div class="field fill border">
                 <input
+                    class="center-align"
                     type="password"
-                    placeholder="Password"
                     v-model="password"
-                    class="input-bigger wide"
+                    placeholder="Password"
                 />
             </div>
-            <div class="form-row-center">
-                <input type="submit" value="Log In" class="badge-link" />
+            <div class="large-margin">
+                <button class="circle indigo small-padding" type="submit">
+                    <i>login</i>
+                </button>
             </div>
-            <div v-if="errorMessage" class="errorMessage">
+            <div v-if="errorMessage" class="chip red-dark-3">
                 {{ errorMessage }}
             </div>
         </form>
@@ -104,18 +106,3 @@ export default defineComponent({
     },
 })
 </script>
-
-<style scoped>
-.container {
-    background-color: lightgray;
-    border-radius: 10px;
-    margin: auto;
-    margin-top: 100px;
-    padding: 50px;
-    width: 500px;
-}
-
-.wide {
-    width: 400px;
-}
-</style>

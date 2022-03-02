@@ -1,13 +1,13 @@
 <template>
-    <div id="header">
-        <div @click="order" v-if="isBartender">Order</div>
-        <div @click="history" v-if="isBartender">History</div>
-        <div @click="users" v-if="isAdmin">Users</div>
-        <div @click="catalog" v-if="isAdmin">Catalog</div>
-        <div @click="members" v-if="isAdmin">Members</div>
-        <div @click="billing" v-if="isAdmin">Billing</div>
-        <div @click="logout">Log Out</div>
-    </div>
+    <header-wrapper>
+        <a @click="order" v-if="isBartender"><i>shopping_cart</i></a>
+        <a @click="history" v-if="isBartender"><i>history</i></a>
+        <a @click="users" v-if="isAdmin"><i>manage_accounts</i></a>
+        <a @click="catalog" v-if="isAdmin"><i>local_bar</i></a>
+        <a @click="members" v-if="isAdmin"><i>people</i></a>
+        <a @click="billing" v-if="isAdmin"><i>attach_money</i></a>
+        <a @click="logout"><i>logout</i></a>
+    </header-wrapper>
 </template>
 
 <script lang="ts">
@@ -16,8 +16,10 @@ import { useRouter } from "vue-router"
 import { useStore } from "@/store/index"
 import { Role } from "@/type/user"
 import { postLogout } from "@/api/auth"
+import HeaderWrapper from "./HeaderWrapper.vue"
 
 export default defineComponent({
+    components: { HeaderWrapper },
     setup() {
         const store = useStore()
         const router = useRouter()
@@ -75,26 +77,3 @@ export default defineComponent({
     },
 })
 </script>
-
-<style scoped>
-#header {
-    background-color: #444444;
-    color: whitesmoke;
-    box-shadow: #444444 0 2px 5px;
-    display: flex;
-    justify-content: space-between;
-}
-
-#header > div {
-    padding: 8px;
-}
-
-#header > div:hover {
-    background-color: #333333;
-}
-
-#header > div:active {
-    background-color: #999999;
-    color: black;
-}
-</style>

@@ -44,7 +44,7 @@ export default defineComponent({
             )
         })
 
-        const buttonType = computed<string>(() => {
+        const buttonType = computed<"submit" | "button">(() => {
             if (props.submit) return `submit`
             return `button`
         })
@@ -97,7 +97,7 @@ export default defineComponent({
 <style scoped>
 button {
     border: none;
-    font-size: 1.1rem;
+    /* font-size: 1.1rem; */
     width: 100%;
     box-sizing: border-box;
     font-family: inherit;
